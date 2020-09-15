@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  user_id       Int    @default(autoincrement()) @id
+  username      String @unique
+  password_hash String
+  role_id       Int?
+  roles         roles? @relation(fields: [role_id], references: [role_id])
+}
+
+model account_types {
+  account_type_id Int        @default(autoincrement()) @id
+  name            String
+  accounts        accounts[]
+}
+
+model accounts {
+  account_id        Int            @default(autoincrement()) @id
+  name              String
+  abstract_account  Boolean
+  account_type_id   Int?
+  account_balance   Float?
+  parent_account_id Int?
+  account_types     account_types? @relation(fields: [account_type_id], references: [account_type_id])
+  accounts          accounts?      @relation("accountsToaccounts_parent_account_id", fields: [parent_account_id], references: [account_id])
+  other_accounts    accounts[]     @relation("accountsToaccounts_parent_account_id")
+}
+
+model actions {
+  action_id     Int             @default(autoincrement()) @id
+  name          String          @unique
+  roles_actions roles_actions[]
+}
+
+model roles {
+  role_id       Int             @default(autoincrement()) @id
+  name          String          @unique
+  roles_actions roles_actions[]
+  users         users[]
+}
+
+model roles_actions {
+  id        Int      @default(autoincrement()) @id
+  role_id   Int?
+  action_id Int?
+  actions   actions? @relation(fields: [action_id], references: [action_id])
+  roles     roles?   @relation(fields: [role_id], references: [role_id])
+}
