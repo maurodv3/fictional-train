@@ -1,5 +1,5 @@
 import Navbar from '../components/Navbar';
-import { GetServerSideProps } from 'next'
+import { GetServerSideProps } from 'next';
 import { PrismaClient } from '@prisma/client';
 import Table from '../components/Table';
 

@@ -25,7 +25,7 @@ export default function Home() {
   );
 }
 
-export const getServerSideProps = withSession(async function ({ req, res }) {
+export const getServerSideProps = withSession(async ({ req, res }) => {
   const user = req.session.get('user');
 
   if (user === undefined) {

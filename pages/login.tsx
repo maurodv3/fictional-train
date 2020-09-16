@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import fetch from 'isomorphic-unfetch';
 import useUser from '../lib/useUser';
 import { useState } from 'react';
-import ErrorMessage from "../components/ErrorMessage";
+import ErrorMessage from '../components/ErrorMessage';
 
 const LoginSchema = Yup.object().shape({
   username: Yup.string()
