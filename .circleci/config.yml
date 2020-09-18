@@ -11,7 +11,7 @@ jobs:
           command: yarn run test
           name: run tests
 orbs:
-  node: 'circleci/node:x.y'
+  node: circleci/node@4.0.0
 version: 2.1
 workflows:
   fictional-train:
