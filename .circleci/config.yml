@@ -1,5 +1,6 @@
 jobs:
-  checkout:
+
+  lint:
     working_directory: ~/repo
     executor:
       name: node/default
@@ -8,15 +9,6 @@ jobs:
       - checkout
       - node/install-packages:
           pkg-manager: yarn
-      - persist_to_workspace:
-          root: ~/repo
-
-  lint:
-    working_directory: ~/repo
-    executor:
-      name: node/default
-      tag: '14.10'
-    steps:
       - run:
           command: yarn tslint
           name: run tslint
@@ -27,20 +19,22 @@ jobs:
       name: node/default
       tag: '14.10'
     steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: yarn
       - run:
           command: yarn test
           name: run tests
 
 orbs:
   node: circleci/node@4.0.0
+
 version: 2.1
+
 workflows:
   fictional-train:
     jobs:
-      - checkout
-      - lint:
-          requires:
-            - checkout
+      - lint
       - test:
           requires:
             - lint
