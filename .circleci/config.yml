@@ -1,23 +1,27 @@
+defaults: &defaults
+  executor:
+    name: node/default
+    tag: '14.10'
+
 jobs:
-  lint:
-      executor:
-        name: node/default
-        tag: '14.10'
-      steps:
-        - checkout
-        - node/install-packages:
-            pkg-manager: yarn
-        - run:
-            command: yarn tslint
-            name: run tslint
-  test:
-    executor:
-      name: node/default
-      tag: '14.10'
+  checkout:
+    <<: *defaults
     steps:
       - checkout
       - node/install-packages:
           pkg-manager: yarn
+      - persist_to_workspace:
+          root: ~/repo
+
+  lint:
+      <<: *defaults
+      steps:
+        - run:
+            command: yarn tslint
+            name: run tslint
+  test:
+    <<: *defaults
+    steps:
       - run:
           command: yarn test
           name: run tests
@@ -28,5 +32,10 @@ version: 2.1
 workflows:
   fictional-train:
     jobs:
-      - lint
-      - test
+      - checkout
+      - lint:
+          requires:
+            - checkout
+      - test:
+          requires:
+            - lint
