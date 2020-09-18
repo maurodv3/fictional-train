@@ -1,0 +1,38 @@
+jobs:
+
+  lint:
+    executor:
+      name: node/default
+      tag: '14.10'
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: yarn
+      - run:
+          command: yarn tslint
+          name: run tslint
+
+  test:
+    executor:
+      name: node/default
+      tag: '14.10'
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: yarn
+      - run:
+          command: yarn test
+          name: run tests
+
+orbs:
+  node: circleci/node@4.0.0
+
+version: 2.1
+
+workflows:
+  fictional-train:
+    jobs:
+      - lint
+      - test:
+          requires:
+            - lint
