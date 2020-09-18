@@ -4,6 +4,8 @@
     "import-name": false,
     "align": false,
     "max-line-length": [true, 150],
+    "no-trailing-whitespace": false,
+    "trailing-comma": false,
     "function-name": [
       true,
       {
