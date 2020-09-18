@@ -2,6 +2,7 @@ import Navbar from '../components/Navbar';
 import { GetServerSideProps } from 'next';
 import { PrismaClient } from '@prisma/client';
 import Table from '../components/Table';
+import withSecureAccess from '../lib/secured';
 
 export default function Account({ accounts }) {
   return (
@@ -16,10 +17,10 @@ export default function Account({ accounts }) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = withSecureAccess(async (context) => {
   const prisma = new PrismaClient();
   const accounts = await prisma.accounts.findMany();
   return {
     props: { accounts },
   };
-};
+}, 'MANAGE_ACCOUNTS');

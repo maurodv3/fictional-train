@@ -1,27 +1,45 @@
 import withSession from '../../lib/session';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export default withSession(async (request, response) => {
-  const { username } = await request.body;
 
-  if (username === 'user_good') {
-    const user = {
-      id: 1,
+  const { username, password } : { username: string, password: string } = await request.body;
+
+  const user = await prisma.users.findOne({
+    where: { username },
+    include: {
+      roles: {
+        include: {
+          roles_actions: {
+            include: {
+              actions: true
+            }
+          }
+        }
+      }
+    }
+  });
+
+  if (user === undefined) {
+    response.status(401).json({ isLoggedIn: false });
+    return;
+  }
+
+  if (user.password_hash === password) {
+    const logged = {
+      id: user.user_id,
       isLoggedIn: true,
-      role: 'admin',
+      role: await user.roles.name,
+      actions: await user.roles.roles_actions.flatMap(({ actions }) => actions.name)
     };
-    request.session.set('user', user);
+    request.session.set('user', logged);
     await request.session.save();
-    response.json(user);
+    response.json(logged);
     return;
   }
 
-  if (username === 'user_bad') {
-    response.status(401)
-      .json({ isLoggedIn: false });
-    return;
-  }
-
-  response.status(500)
-    .json({ message: 'Something un-expected happened' });
+  response.status(401).json({ isLoggedIn: false });
 
 });

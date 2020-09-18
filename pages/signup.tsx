@@ -47,7 +47,7 @@ export default function Signup() {
             placeholder={'john@acme.com'}
             type={'email'}
           />
-          <FormSubmit disabled={true}>Submit</FormSubmit>
+          <FormSubmit disabled={true}><p>Submit</p></FormSubmit>
         </Form>
       </Formik>
       <p className="text-center text-gray-500 text-xs">
