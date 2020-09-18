@@ -1,9 +1,9 @@
 jobs:
   checkout:
     working_directory: ~/repo
-      executor:
-        name: node/default
-        tag: '14.10'
+    executor:
+      name: node/default
+      tag: '14.10'
     steps:
       - checkout
       - node/install-packages:
@@ -13,18 +13,19 @@ jobs:
 
   lint:
     working_directory: ~/repo
-      executor:
-        name: node/default
-        tag: '14.10'
-      steps:
-        - run:
-            command: yarn tslint
-            name: run tslint
+    executor:
+      name: node/default
+      tag: '14.10'
+    steps:
+      - run:
+          command: yarn tslint
+          name: run tslint
+
   test:
     working_directory: ~/repo
-      executor:
-        name: node/default
-        tag: '14.10'
+    executor:
+      name: node/default
+      tag: '14.10'
     steps:
       - run:
           command: yarn test
