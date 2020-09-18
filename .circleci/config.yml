@@ -1,7 +1,6 @@
 jobs:
 
   lint:
-    working_directory: ~/repo
     executor:
       name: node/default
       tag: '14.10'
@@ -14,7 +13,6 @@ jobs:
           name: run tslint
 
   test:
-    working_directory: ~/repo
     executor:
       name: node/default
       tag: '14.10'
