@@ -1,6 +1,6 @@
 import { Formik, Form, FormikHelpers } from 'formik';
-import FormInput from '../components/FormInput';
-import FormSubmit from '../components/FormSubmit';
+import FormInput from '../../components/FormInput';
+import FormSubmit from '../../components/FormSubmit';
 
 interface Values {
   firstName: string;

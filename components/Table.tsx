@@ -29,7 +29,7 @@ function TableHeader({ headers } : {
     <thead>
       <tr key={'table-header'}>
         {headers.map((header: string) =>
-          <th className="w-1/2 px-4 py-2" key={header}>
+          <th className="px-4 py-2" key={header}>
             {header}
           </th>,
         )}

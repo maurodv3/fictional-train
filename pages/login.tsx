@@ -6,13 +6,7 @@ import fetch from 'isomorphic-unfetch';
 import useUser from '../lib/useUser';
 import { useState } from 'react';
 import ErrorMessage from '../components/ErrorMessage';
-
-const LoginSchema = Yup.object().shape({
-  username: Yup.string()
-        .required('El nombre de usuario es obligatorio.'),
-  password: Yup.string()
-        .required('La contraseña es obligatoria.'),
-});
+import { useTranslation } from 'react-i18next';
 
 interface Values {
   username: string;
@@ -25,11 +19,19 @@ function isButtonDisabled(errors, touched) {
 
 export default function Login() {
 
+  const [t] = useTranslation();
   const [errorMsg, setErrorMsg] = useState('');
 
   const { mutateUser } = useUser({
     redirectTo: '/',
     redirectIfFound: true,
+  });
+
+  const LoginSchema = Yup.object().shape({
+    username: Yup.string()
+      .required(t('login_username_required')),
+    password: Yup.string()
+      .required(t('login_password_required')),
   });
 
   async function handleSubmit(values: Values, { setSubmitting }: FormikHelpers<Values>) {
@@ -48,7 +50,7 @@ export default function Login() {
       );
     } catch (error) {
       console.error(error);
-      setErrorMsg('El usuario y/o la contraseña son invalidos.');
+      setErrorMsg(t('login_invalid_data_msg'));
     }
     setSubmitting(false);
   }
@@ -56,6 +58,12 @@ export default function Login() {
   return (
     <div className="rounded-t-lg overflow-hidden border-t border-l border-r border-gray-400 px-3 py-10 flex justify-center ">
       <div className="w-full max-w-md">
+        <div className="flex justify-center text-center mb-5">
+          <img className="h-24 w-24" src="https://tailwindui.com/img/logos/workflow-mark-on-dark.svg" alt="Workflow logo"/>
+        </div>
+        <div className="flex justify-center text-center mb-5">
+          <p className="text-indigo-500 text-xl font-mono font-bold">{t('brand_name')}</p>
+        </div>
         <Formik
           initialValues={{
             username: '',
@@ -69,27 +77,27 @@ export default function Login() {
               <FormInput
                 id={'username'}
                 name={'username'}
-                label={'Usuario'}
-                placeholder={'usuario_68'}
+                label={'login_username_field'}
+                placeholder={'login_username_field_placeholder'}
               />
               <FormInput
                 id={'password'}
                 name={'password'}
-                label={'Contraseña'}
-                placeholder={'******'}
+                label={'login_password_field'}
+                placeholder={'login_password_field_placeholder'}
                 type={'password'}
               />
               <FormSubmit disabled={isButtonDisabled(errors, touched)}>
-                <p>Iniciar Sesion</p>
+                <p>{t('login')}</p>
               </FormSubmit>
               { errorMsg ?
-                <ErrorMessage><p>El usuario y/o la contraseña son invalidos.</p></ErrorMessage>
+                <ErrorMessage><p>{t('login_invalid_data_msg')}</p></ErrorMessage>
                 : null }
             </Form>
           )}
         </Formik>
         <p className="text-center text-gray-500 text-xs">
-          &copy;2020 Mauro Vidal
+          {t('copyright')}
         </p>
       </div>
     </div>

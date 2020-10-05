@@ -22,7 +22,7 @@ export default withSession(async (request, response) => {
     }
   });
 
-  if (user === undefined) {
+  if (user === undefined || user === null) {
     response.status(401).json({ isLoggedIn: false });
     return;
   }
@@ -30,6 +30,7 @@ export default withSession(async (request, response) => {
   if (user.password_hash === password) {
     const logged = {
       id: user.user_id,
+      username: user.username,
       isLoggedIn: true,
       role: await user.roles.name,
       actions: await user.roles.roles_actions.flatMap(({ actions }) => actions.name)

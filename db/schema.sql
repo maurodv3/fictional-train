@@ -13,6 +13,8 @@ CREATE TABLE actions (
 CREATE TABLE users (
     user_id SERIAL,
     username VARCHAR(100) UNIQUE NOT NULL,
+    display_name varchar(100),
+    email VARCHAR(100) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     role_id INT,
     PRIMARY KEY(user_id),
@@ -40,8 +42,8 @@ INSERT INTO roles_actions VALUES (2, 1, 2);
 INSERT INTO roles_actions VALUES (3, 1, 3);
 INSERT INTO roles_actions VALUES (4, 2, 2);
 
-INSERT INTO users VALUES (1, 'admin', 'admin', 1);
-INSERT INTO users VALUES (2, 'user', 'user', 2);
+INSERT INTO users VALUES (1, 'admin', 'Admin Istrador', 'admin@b3000.com', 'admin', 1);
+INSERT INTO users VALUES (2, 'user', 'Usua Rio', 'usuario@b3000.com', 'user', 2);
 
 CREATE TABLE account_types (
     account_type_id SERIAL,

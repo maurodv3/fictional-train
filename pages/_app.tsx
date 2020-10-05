@@ -2,6 +2,7 @@ import '../styles/index.css';
 import { SWRConfig } from 'swr';
 import { AppProps } from 'next/app';
 import fetch from '../lib/fetch-json';
+import '../i18n';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (

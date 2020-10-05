@@ -1,3 +1,41 @@
 {
+  "brand_name": "Balbinator 3000",
+  "logout": "Cerrar sesión",
+  "copyright": "© 2020 Mauro Vidal",
+
+  "login": "Iniciar Sesión",
+  "login_username_field": "Usuario",
+  "login_username_field_placeholder": "usuario_76",
+  "login_password_field": "Contraseña",
+  "login_password_field_placeholder": "******",
+  "login_username_required": "El nombre de usuario es obligatorio.",
+  "login_password_required": "La contraseña es obligatoria.",
+  "login_invalid_data_msg": "El usuario y/o la contraseña son inválidos.",
+
+  "tab_actions": "Acciones",
+  "tab_entries": "Asientos",
+  "tab_books": "Libros",
+  "tab_accounts": "Cuentas",
+
+  "main_subtitle": "Acciones y actividades",
+  "main_introduction": "Bienvenido, para empezar elige una actividad o acción a realizar en el sistema.",
+  "main_action_add_entry": "Agregar asiento",
+  "main_action_add_entry_desc": "Agregar nuevo asiento contable en el libro diario.",
+  "main_action_view_books": "Ver libros contables",
+  "main_action_view_books_desc": "Visualizar los libros contables diarios y mayores.",
+  "main_action_close_session": "Salir",
+  "main_action_close_session_desc": " Cerrar sesión del sistema.",
+
+  "main_action_manage_accounts": "Administrar cuentas",
+  "main_action_manage_accounts_desc": "Administrar, cuentas contables existentes y agregar nuevas.",
+
+  "book_entry_title": "Agregar Asiento",
+  "details": "Detalles",
+  "insert_description_tooltip": "Ingrese la descripción aquí.",
+  "account_and_amount": "Cuentas y Montos",
+  "summary": "Resumen",
+
+  "logout_success": "La sesion se cerro correctamente.",
+  "logout_success_desc" : "Sera redirigido a la pantalla de autenticacion despues de 3 segundos."
 
 }
