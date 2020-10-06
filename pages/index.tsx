@@ -11,6 +11,60 @@ const tabs : TabInfo[] = [
   { name: 'tab_accounts', href: '/account', active: false }
 ];
 
+interface Card {
+  href: string;
+  title_key: string;
+  description_key: string;
+  icon: object;
+}
+
+const cards : Card[] = [
+  {
+    href: '/book_entry',
+    title_key: 'main_action_add_entry',
+    description_key: 'main_action_add_entry_desc',
+    icon: (
+      <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+              d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+    )
+  },
+  {
+    href: '/book',
+    title_key: 'main_action_view_books',
+    description_key: 'main_action_view_books_desc',
+    icon: (
+      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+              d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/>
+      </svg>
+    )
+  },
+  {
+    href: '/account',
+    title_key: 'main_action_manage_accounts',
+    description_key: 'main_action_manage_accounts_desc',
+    icon: (
+      <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    )
+  },
+  {
+    href: '/logout',
+    title_key: 'main_action_close_session',
+    description_key: 'main_action_close_session_desc',
+    icon: (
+      <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+      </svg>
+    )
+  },
+];
+
 export default function Home() {
 
   const [t] = useTranslation();
@@ -32,90 +86,27 @@ export default function Home() {
 
             <div className="mt-10">
               <ul className="md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-10">
-
-                <Link href="/book_entry">
-                  <li className="cursor-pointer">
-                    <div className="flex">
-                      <div className="flex-shrink-0">
-                        <div className="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
-                          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                                  d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
-                          </svg>
+                {cards.map((card, index) => {
+                  return (
+                    <Link href={card.href}>
+                      <li className="mt-10 md:mt-0 cursor-pointer" key={`card-${index}`}>
+                        <div className="flex">
+                          <div className="flex-shrink-0">
+                            <div className="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+                              {card.icon}
+                            </div>
+                          </div>
+                          <div className="ml-4">
+                            <h4 className="text-lg leading-6 font-medium text-gray-900">{t(card.title_key)}</h4>
+                            <p className="mt-2 text-base leading-6 text-gray-500">
+                              {t(card.description_key)}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                      <div className="ml-4">
-                        <h4 className="text-lg leading-6 font-medium text-gray-900">{t('main_action_add_entry')}</h4>
-                        <p className="mt-2 text-base leading-6 text-gray-500">
-                          {t('main_action_add_entry_desc')}
-                        </p>
-                      </div>
-                    </div>
-                  </li>
-                </Link>
-
-                <Link href="/book">
-                  <li className="mt-10 md:mt-0 cursor-pointer">
-                    <div className="flex">
-                      <div className="flex-shrink-0">
-                        <div className="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
-                          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                                  d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/>
-                          </svg>
-                        </div>
-                      </div>
-                      <div className="ml-4">
-                        <h4 className="text-lg leading-6 font-medium text-gray-900">{t('main_action_view_books')}</h4>
-                        <p className="mt-2 text-base leading-6 text-gray-500">
-                          {t('main_action_view_books_desc')}
-                        </p>
-                      </div>
-                    </div>
-                  </li>
-                </Link>
-
-                <Link href="/account">
-                  <li className="mt-10 md:mt-0 cursor-pointer">
-                    <div className="flex">
-                      <div className="flex-shrink-0">
-                        <div className="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
-                          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                          </svg>
-                        </div>
-                      </div>
-                      <div className="ml-4">
-                        <h4 className="text-lg leading-6 font-medium text-gray-900">{t('main_action_manage_accounts')}</h4>
-                        <p className="mt-2 text-base leading-6 text-gray-500">
-                          {t('main_action_manage_accounts_desc')}
-                        </p>
-                      </div>
-                    </div>
-                  </li>
-                </Link>
-
-                <Link href="/logout">
-                  <li className="mt-10 md:mt-0 cursor-pointer">
-                    <div className="flex">
-                      <div className="flex-shrink-0">
-                        <div className="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
-                          <svg className="h-6 w-6" fill="none" viewBox="-2 -2 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                              d="M10 20a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm5-11H5v2h10V9z"/>
-                          </svg>
-                        </div>
-                      </div>
-                      <div className="ml-4">
-                        <h4 className="text-lg leading-6 font-medium text-gray-900">{t('main_action_close_session')}</h4>
-                        <p className="mt-2 text-base leading-6 text-gray-500">
-                          {t('main_action_close_session_desc')}
-                        </p>
-                      </div>
-                    </div>
-                  </li>
-                </Link>
-
+                      </li>
+                    </Link>
+                  );
+                })}
               </ul>
             </div>
           </div>

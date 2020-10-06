@@ -59,7 +59,16 @@ export default function Navbar({ children, tabs, withHeader, displayName } :
   }
 
   const [userMenuIsOpen, setUserMenuIsOpen] = useState(false);
+  const handleUserMenuOpen = (e) => {
+    e.preventDefault();
+    setUserMenuIsOpen(!userMenuIsOpen);
+  };
+
   const [displaySmallView, setDisplaySmallView] = useState(false);
+  const handleDisplaySmallView = (e) => {
+    e.preventDefault();
+    setDisplaySmallView(!displaySmallView);
+  };
 
   return (
     <div>
@@ -81,7 +90,7 @@ export default function Navbar({ children, tabs, withHeader, displayName } :
                 <div className="ml-3 relative">
                   <div>
                     <button className="max-w-xs flex items-center text-sm rounded-full text-white focus:outline-none focus:shadow-solid"
-                            id="user-menu" aria-label="User menu" aria-haspopup="true" onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}>
+                            id="user-menu" aria-label="User menu" aria-haspopup="true" onClick={handleUserMenuOpen}>
                       <img className="h-8 w-8 rounded-full"
                            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                            alt=""/>
@@ -108,7 +117,7 @@ export default function Navbar({ children, tabs, withHeader, displayName } :
               </div>
             </div>
             <div className="-mr-2 flex md:hidden">
-              <button onClick={() => setDisplaySmallView(!displaySmallView)}
+              <button onClick={handleDisplaySmallView}
                 className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-white">
                 <svg className="block h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"/>
