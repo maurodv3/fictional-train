@@ -6,6 +6,7 @@ export default function withSecureAccess(handler, clearance) {
     const user = req.session.get('user');
 
     if (user === undefined) {
+      console.log('User trying to access secured location, redirecting to /login.');
       res.setHeader('location', '/login');
       res.statusCode = 302;
       res.end();

@@ -7,8 +7,22 @@
 /* Stop purging. */
 
 /* Write you own custom component styles here */
-.btn-blue {
-    @apply bg-blue-500 text-white font-bold py-2 px-4 rounded;
+.std-data-input {
+    @apply .shadow .appearance-none .border .rounded .text-gray-700 .leading-tight
+}
+
+.std-data-input:focus {
+    @apply .outline-none .shadow-outline
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
 }
 
 /* Start purging... */
@@ -16,3 +30,5 @@
 /* Stop purging. */
 
 /* Your own custom utilities */
+
+

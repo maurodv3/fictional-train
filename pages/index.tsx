@@ -1,8 +1,8 @@
-import withSession from '../lib/session';
 import React from 'react';
 import Navbar, { TabInfo } from '../components/Navbar';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
+import withSecureAccess from '../lib/secured';
 
 const tabs : TabInfo[] = [
   { name: 'tab_actions', href: '/', active: true },
@@ -90,7 +90,7 @@ export default function Home() {
                   return (
                     <Link href={card.href}>
                       <li className="mt-10 md:mt-0 cursor-pointer" key={`card-${index}`}>
-                        <div className="flex">
+                        <div className="flex hover:shadow-outline">
                           <div className="flex-shrink-0">
                             <div className="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
                               {card.icon}
@@ -116,17 +116,8 @@ export default function Home() {
   );
 }
 
-export const getServerSideProps = withSession(async ({ req, res }) => {
-  const user = req.session.get('user');
-
-  if (user === undefined) {
-    res.setHeader('location', '/login');
-    res.statusCode = 302;
-    res.end();
-    return { props: {} };
-  }
-
+export const getServerSideProps = withSecureAccess(async ({ req, res }) => {
   return {
-    props: { user: req.session.get('user') },
+    props: { },
   };
-});
+}, null);

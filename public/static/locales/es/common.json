@@ -36,6 +36,9 @@
   "summary": "Resumen",
 
   "logout_success": "La sesion se cerro correctamente.",
-  "logout_success_desc" : "Sera redirigido a la pantalla de autenticacion despues de 3 segundos."
+  "logout_success_desc" : "Sera redirigido a la pantalla de autenticacion despues de 3 segundos.",
+
+  "select_account": "Seleccionar Cuenta",
+  "search_placeholder": "Buscar..."
 
 }
