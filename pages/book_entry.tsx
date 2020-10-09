@@ -8,6 +8,7 @@ import { useState } from 'react';
 import AccountSelect from '../components/AccountSelect';
 import ToggleButton from '../components/ToggleButton';
 import Table from '../components/Table';
+import FormMoneyInput from '../components/FormMoneyInput';
 
 const tabs : TabInfo[] = [
   { name: 'tab_actions', href: '/', active: false },
@@ -21,27 +22,14 @@ function FormSection({ label, children, fixedHeight }) {
   return (
     <div className="flex flex-wrap -mx-2">
       <div className="w-1/4 px-2">
-        <div className={`${h} bg-gray-800 px-4 py-4 rounded-sm`}>
-          <p className="text-xl text-gray-100">{label}</p>
+        <div className={`${h} px-4 py-4 rounded-sm`}>
+          <p className="text-xl font-medium text-gray-700">{label}</p>
         </div>
       </div>
-      <div className="w-3/4 px-2">
-        <div className={`${h} bg-gray-300 rounded-sm px-4 py-4`}>
+      <div className="w-3/4 px-2 border border-gray-100 rounded-md shadow-md bg-white">
+        <div className={`${h} rounded-sm px-4 py-4`}>
           {children}
         </div>
-      </div>
-    </div>
-  );
-}
-
-function FormMoneyInput() {
-  return (
-    <div>
-      <div className="relative rounded-md shadow-sm">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <span className="text-gray-500 sm:text-sm sm:leading-5 font-bold">$</span>
-        </div>
-        <input id="price" className="block pl-7 pr-12 py-2 px-4 sm:text-sm sm:leading-5 std-data-input" placeholder="0.00"/>
       </div>
     </div>
   );
@@ -55,7 +43,7 @@ export default function BookEntry({ accounts }) {
 
   const botones = (
     <div className="flex">
-      <svg className="h-5 w-5 mr-1 ml-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg className="h-5 w-5 mr-1 ml-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="indigo" fillOpacity="0.5" strokeOpacity="0.8">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
       </svg>
       <svg className="h-5 w-5 mr-1 ml-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -69,42 +57,62 @@ export default function BookEntry({ accounts }) {
 
       <div className="px-2">
         <FormSection label={t('account_and_amount')} fixedHeight={'full'}>
-          <div className="flex justify-evenly pb-3 border-b-2 border-white">
+          <div className="flex justify-evenly pb-3 border-b-2 border-gray-100">
             <div className="text-center">
               <AccountSelect accounts={accounts} onClick={() => console.log('Click!')} />
             </div>
             <div className="text-center">
-              <FormMoneyInput/>
+              <FormMoneyInput onChange={e => console.log(e)}/>
             </div>
             <div className="text-center mt-2">
               <ToggleButton onClick={() => setToggle(!toggle)} checked={toggle}
                             checkedLabel={'Haber'} uncheckedLabel={'Debe'} id={'movement-type'}/>
             </div>
+            <div className="text-center mt-2">
+              <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="green" fillOpacity="0.5" strokeOpacity="0.8">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+              </svg>
+            </div>
           </div>
           <div className="mt-3">
             <Table headers={['Cuenta', 'Debe', 'Haber', 'Acciones']}
                    values={[
-                       { cuenta: 'Caja', debe: '1200.50', acciones: <div>{botones}</div> },
-                       { cuenta: '-> Ventas', haber: '1200.50', acciones: <div>{botones}</div> },
+                       { cuenta: 'Caja', debe: '120,000.50', acciones: <div>{botones}</div> },
+                       { cuenta: '(->) Costo mercaderias vencidas (500)', haber: '120,000.50', acciones: <div>{botones}</div> },
                        { cuenta: 'CMV', debe: '1200.50', acciones: <div>{botones}</div> },
-                       { cuenta: '-> Mercaderias', haber: '1200.50', acciones: <div>{botones}</div> }
+                       { cuenta: '(->) Mercaderias', haber: '1200.50', acciones: <div>{botones}</div> }
                    ]}
                    selectedFields={['cuenta', 'debe', 'haber', 'acciones']}/>
           </div>
         </FormSection>
       </div>
 
-      <div className="px-2 mt-3">
+      <div className="mt-3 px-2 py-5 border-t border-gray-300">
         <FormSection label={t('details')} fixedHeight={36}>
           <textarea style={{ resize : 'none' }} rows={3} className="form-textarea block w-full h-full std-data-input" placeholder={t('insert_description_tooltip')}/>
         </FormSection>
       </div>
 
-      <div className="px-2 mt-3">
+      <div className="mt-3 px-2 py-5 border-t border-gray-300">
         <FormSection label={t('summary')} fixedHeight={'full'}>
+          <div className="mb-3">
+            <div className="flex justify-evenly">
+              <div className="text-center">
+                <p className="font-medium">Debe Total</p><p>1050.50</p>
+              </div>
+              <div className="text-center">
+                <p className="font-medium">Haber Total</p><p>1000.00</p>
+              </div>
+              <div className="text-center">
+                <p className="font-medium">Diferencia</p><p>50.50</p>
+              </div>
+            </div>
+          </div>
+          <div className="pt-3 text-right border-t border-gray-300">
             <FormSubmit disabled={true}>
-              <p>Agregar</p>
+              <p>Agregar Asiento</p>
             </FormSubmit>
+          </div>
         </FormSection>
       </div>
     </Navbar>

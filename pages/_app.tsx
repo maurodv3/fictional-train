@@ -13,7 +13,7 @@ export default function App({ Component, pageProps }: AppProps) {
           console.error(err);
         }}
       }>
-      <div className="h-screen">
+      <div className="h-screen bg-gray-100">
         <Component {...pageProps} />
       </div>
       <style global jsx>{`

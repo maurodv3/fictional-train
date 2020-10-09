@@ -5,7 +5,7 @@ export default function Table({ headers, values, selectedFields } :
     selectedFields: string[],
   }) {
   return (
-    <table className="table-auto">
+    <table className="table-auto w-full">
       <TableHeader headers={headers}/>
       <tbody>
         {values.map((value: object, index: number) =>

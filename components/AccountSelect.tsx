@@ -31,7 +31,11 @@ function Options({ options, onClick }) {
   );
 }
 
-export default function AccountSelect({ accounts, onClick } : { accounts : Record<string, Account[]>, onClick: object }) {
+export default function AccountSelect({ accounts, onClick } :
+  {
+    accounts : Record<string, Account[]>,
+    onClick: object
+  }) {
 
   const [t] = useTranslation();
   const [open, setOpen] = useState(false);
@@ -83,7 +87,7 @@ export default function AccountSelect({ accounts, onClick } : { accounts : Recor
         leave={'transition ease-in duration-75'}
         leaveFrom={'transform opacity-100 scale-100'}
         leaveTo={'transform opacity-0 scale-95'} show={open}>
-        <div className="origin-top-right absolute right-0 mt-2 w-64 rounded-md shadow-lg z-10">
+        <div className="origin-top-right absolute right-0 mt-2 mb-2 w-64 rounded-md shadow-lg z-10">
           <div className="rounded-md bg-white shadow-xs" aria-orientation="vertical">
             <div className="px-3 py-3 relative mx-auto text-gray-600">
               <input className="w-full border-2 border-gray-300 bg-white h-10 px-2 pr-8 rounded text-sm focus:outline-none" autoComplete="off"

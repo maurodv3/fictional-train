@@ -20,38 +20,22 @@ export default function Navbar({ children, tabs, withHeader, displayName } :
   const [t] = useTranslation();
 
   function buildTab(tab : TabInfo, index: number) {
-    if (tab.active) {
-      return (
-        <Link href={tab.href} key={`link-${index}`}>
-          <a className="px-3 py-2 rounded-md text-sm font-medium text-white bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700">
-            {t(tab.name)}
-          </a>
-        </Link>
-      );
-    }
     return (
       <Link href={tab.href} key={`link-${index}`}>
-        <a className="px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700">
+        <a className={tab.active ?
+          'px-3 py-2 rounded-md text-sm font-medium text-white bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700' :
+          'px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700'}>
           {t(tab.name)}
         </a>
       </Link>
     );
   }
+
   function buildSmallTab(tab: TabInfo, index: number) {
-    if (tab.active) {
-      return (
-        <Link href={tab.href} key={`link-${index}`}>
-          <a className="block px-3 py-2 rounded-md text-base font-medium text-white bg-gray-900 focus:outline-none
-            focus:text-white focus:bg-gray-700">
-            {t(tab.name)}
-          </a>
-        </Link>
-      );
-    }
     return (
       <Link href={tab.href} key={`link-${index}`}>
-        <a className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700
-          focus:outline-none focus:text-white focus:bg-gray-700">
+        <a className={tab.active ? 'block px-3 py-2 rounded-md text-base font-medium text-white bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700' :
+          'block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700'}>
           {t(tab.name)}
         </a>
       </Link>

@@ -7,7 +7,7 @@ const InnerToggle = (id, checked, label, onClick) => {
             <span className="block w-10 h-6 bg-white rounded-full shadow-inner"></span>
             <span
               className={ checked ?
-                'absolute block w-4 h-4 mt-1 ml-1 rounded-full shadow inset-y-0 left-0 focus-within:shadow-outline transition-transform duration-300 ease-in-out bg-indigo-700 transform translate-x-full'
+                'absolute block w-4 h-4 mt-1 ml-1 rounded-full shadow-md inset-y-0 left-0 focus-within:shadow-outline transition-transform duration-300 ease-in-out bg-indigo-700 transform translate-x-full'
                 : 'absolute block w-4 h-4 mt-1 ml-1 bg-gray-400 rounded-full shadow inset-y-0 left-0 focus-within:shadow-outline transition-transform duration-300 ease-in-out'}>
                 <input id={id} type="checkbox" className="absolute opacity-0 w-0 h-0" onClick={onClick}/>
             </span>
@@ -18,7 +18,14 @@ const InnerToggle = (id, checked, label, onClick) => {
   );
 };
 
-export default function ToggleButton({ id, checked, onClick, checkedLabel, uncheckedLabel }) {
+export default function ToggleButton({ id, checked, onClick, checkedLabel, uncheckedLabel }:
+  {
+    id: string;
+    checked: boolean;
+    onClick: object;
+    checkedLabel: string;
+    uncheckedLabel: string;
+  }) {
   return checked ?
     InnerToggle(`${id}-checked`, true, checkedLabel, onClick) :
     InnerToggle(`${id}-unchecked`, false, uncheckedLabel, onClick);
