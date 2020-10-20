@@ -37,7 +37,7 @@ export default function Login() {
   async function handleSubmit(values: Values, { setSubmitting }: FormikHelpers<Values>) {
     try {
       await mutateUser(
-        fetch('http://localhost:3001/api/login', {
+        fetch('/api/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(values),

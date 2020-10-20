@@ -33,12 +33,28 @@
   "details": "Detalles",
   "insert_description_tooltip": "Ingrese la descripción aquí.",
   "account_and_amount": "Cuentas y Montos",
+  "account": "Cuenta",
   "summary": "Resumen",
+  "assets": "Haber",
+  "debit": "Debe",
+  "total_assets": "Haber total",
+  "total_debit": "Debe total",
+  "total_diff": "Diferencia",
+  "add_entry": "Agregar Asiento",
+  "entry.success": "El asiento se agrego correctamente.",
+  "entry.error": "No se pudo agregar el asiento.",
+  "entry.error.account": "La cuenta \"{{account_name}} ({{account_id}})\" no tiene saldo suficiente para realizar la operacion.",
 
   "logout_success": "La sesion se cerro correctamente.",
   "logout_success_desc" : "Sera redirigido a la pantalla de autenticacion despues de 3 segundos.",
 
   "select_account": "Seleccionar Cuenta",
-  "search_placeholder": "Buscar..."
+  "search_placeholder": "Buscar...",
+
+
+
+  "account.entry.add": "Agregar cuenta",
+  "account.entry.account.name": "Nombre de cuenta",
+  "account.entry.account.name.placeholder": "Nombre de cuenta"
 
 }

@@ -7,5 +7,6 @@ export default interface Account {
   account_type_id: number;
   account_balance: number;
   parent_account_id: number;
-  account_type: AccountType;
+  enabled: boolean;
+  account_types: AccountType;
 }

@@ -2,13 +2,18 @@ import Navbar, { TabInfo } from '../components/Navbar';
 import { useTranslation } from 'react-i18next';
 import { GetServerSideProps } from 'next';
 import withSecureAccess from '../lib/secured';
-import { PrismaClient } from '@prisma/client';
 import FormSubmit from '../components/FormSubmit';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AccountSelect from '../components/AccountSelect';
 import ToggleButton from '../components/ToggleButton';
-import Table from '../components/Table';
 import FormMoneyInput from '../components/FormMoneyInput';
+import TableV2 from '../components/TableV2';
+import { Form, Formik } from 'formik';
+import fetch from 'isomorphic-unfetch';
+import FormSection from '../components/FormSection';
+import FormErrorMessage from '../components/FormErrorMessage';
+import FormSuccessMessage from '../components/FormSuccessMessage';
+import { getGroupedAccounts } from '../handlers/account/accountService';
 
 const tabs : TabInfo[] = [
   { name: 'tab_actions', href: '/', active: false },
@@ -17,124 +22,203 @@ const tabs : TabInfo[] = [
   { name: 'tab_accounts', href: '/account', active: false }
 ];
 
-function FormSection({ label, children, fixedHeight }) {
-  const h = fixedHeight ? `h-${fixedHeight}` : '';
-  return (
-    <div className="flex flex-wrap -mx-2">
-      <div className="w-1/4 px-2">
-        <div className={`${h} px-4 py-4 rounded-sm`}>
-          <p className="text-xl font-medium text-gray-700">{label}</p>
-        </div>
-      </div>
-      <div className="w-3/4 px-2 border border-gray-100 rounded-md shadow-md bg-white">
-        <div className={`${h} rounded-sm px-4 py-4`}>
-          {children}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function BookEntry({ accounts }) {
 
   const [t] = useTranslation();
+  const numberFormatter = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'ARS' });
   const header = <p>{t('book_entry_title')}</p>;
-  const [toggle, setToggle] = useState(true);
 
-  const botones = (
-    <div className="flex">
-      <svg className="h-5 w-5 mr-1 ml-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="indigo" fillOpacity="0.5" strokeOpacity="0.8">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-      </svg>
-      <svg className="h-5 w-5 mr-1 ml-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
-      </svg>
-    </div>
-  );
+  const [toggle, setToggle] = useState(false); // TRUE => Haber / FALSE => Debe
+  const [selectedAccount, setSelectedAccount] = useState(null);
+  const [amount, setAmount] = useState('');
+  const [description, setDescription] = useState('');
+
+  const [entries, setEntries] = useState([]);
+
+  const [success, setSuccess] = useState(false);
+  const [errors, setErrors] = useState(null);
+
+  const headers = [t('account'), t('debit'), t('assets')];
+  const selectedFields = ['displayName', 'debit', 'assets'];
+
+  const selectAccount = (account) => {
+    setSelectedAccount(account);
+  };
+
+  const amountChange = (e) => {
+    setAmount(e.target.value);
+  };
+
+  const descriptionChange = (e) => {
+    setDescription(e.target.value);
+  };
+
+  const clearForm = () => {
+    setToggle(false);
+    setSelectedAccount(null);
+    setAmount('');
+    setDescription('');
+    setEntries([]);
+    setErrors(null);
+  };
+
+  const isAddEntryEnabled = () => {
+    return (amount && amount.length !== 0) && selectedAccount;
+  };
+
+  const addEntry = () => {
+    const entry = {
+      account: selectedAccount
+    };
+    const displayName = `${selectedAccount.name} (${selectedAccount.account_id})`;
+    if (toggle) {
+      entry['displayName'] = <p className="pl-6">{displayName}</p>;
+      entry['assets'] = parseFloat(amount);
+    } else {
+      entry['displayName'] = <p>{displayName}</p>;
+      entry['debit'] = parseFloat(amount);
+    }
+    setEntries([...entries, entry]);
+  };
+
+  const moveEntry = (i, j) => {
+    const original = entries;
+    const a = entries[i];
+    const b = entries[j];
+    if (a && b) {
+      original[i] = b;
+      original[j] = a;
+      setEntries([...original]);
+    }
+  };
+
+  const deleteEntry = (i) => {
+    const original = entries;
+    original.splice(i, 1);
+    setEntries([...original]);
+  };
+
+  const [assetsTotal, setAssetsTotal] = useState(0);
+  const [debitTotal, setDebitTotal] = useState(0);
+
+  useEffect(() => {
+    setAssetsTotal(entries.reduce((a, b) => a + (b['assets'] || 0), 0));
+    setDebitTotal(entries.reduce((a, b) => a + (b['debit'] || 0), 0));
+  }, [entries]);
+
+  const isSubmitEnabled = () => {
+    return Math.abs((assetsTotal - debitTotal)) === 0 && assetsTotal !== 0 && debitTotal !== 0 && description ;
+  };
+
+  const submit = async () => {
+    const body = {
+      description,
+      entries: entries.map((entry) => {
+        return {
+          account_id: entry.account.account_id,
+          debit: entry.debit,
+          assets: entry.assets,
+        };
+      })
+    };
+
+    await fetch('/api/entry', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    }).then((response) => {
+      if (response.status === 200) {
+        setSuccess(true);
+        clearForm();
+      } else {
+        response.json().then((errors) => {
+          setErrors(errors.msg);
+        });
+      }
+    });
+  };
 
   return (
     <Navbar withHeader={header} tabs={tabs}>
 
-      <div className="px-2">
-        <FormSection label={t('account_and_amount')} fixedHeight={'full'}>
-          <div className="flex justify-evenly pb-3 border-b-2 border-gray-100">
-            <div className="text-center">
-              <AccountSelect accounts={accounts} onClick={() => console.log('Click!')} />
-            </div>
-            <div className="text-center">
-              <FormMoneyInput onChange={e => console.log(e)}/>
-            </div>
-            <div className="text-center mt-2">
-              <ToggleButton onClick={() => setToggle(!toggle)} checked={toggle}
-                            checkedLabel={'Haber'} uncheckedLabel={'Debe'} id={'movement-type'}/>
-            </div>
-            <div className="text-center mt-2">
-              <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="green" fillOpacity="0.5" strokeOpacity="0.8">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
-            </div>
-          </div>
-          <div className="mt-3">
-            <Table headers={['Cuenta', 'Debe', 'Haber', 'Acciones']}
-                   values={[
-                       { cuenta: 'Caja', debe: '120,000.50', acciones: <div>{botones}</div> },
-                       { cuenta: '(->) Costo mercaderias vencidas (500)', haber: '120,000.50', acciones: <div>{botones}</div> },
-                       { cuenta: 'CMV', debe: '1200.50', acciones: <div>{botones}</div> },
-                       { cuenta: '(->) Mercaderias', haber: '1200.50', acciones: <div>{botones}</div> }
-                   ]}
-                   selectedFields={['cuenta', 'debe', 'haber', 'acciones']}/>
-          </div>
-        </FormSection>
-      </div>
+      <FormSuccessMessage show={success} message={'entry.success'}/>
 
-      <div className="mt-3 px-2 py-5 border-t border-gray-300">
-        <FormSection label={t('details')} fixedHeight={36}>
-          <textarea style={{ resize : 'none' }} rows={3} className="form-textarea block w-full h-full std-data-input" placeholder={t('insert_description_tooltip')}/>
-        </FormSection>
-      </div>
+      { errors ? (
+        <FormErrorMessage errors={errors}/>
+      ) : null }
 
-      <div className="mt-3 px-2 py-5 border-t border-gray-300">
-        <FormSection label={t('summary')} fixedHeight={'full'}>
-          <div className="mb-3">
-            <div className="flex justify-evenly">
-              <div className="text-center">
-                <p className="font-medium">Debe Total</p><p>1050.50</p>
+      <Formik initialValues={{ description: '' }} onSubmit={submit}>
+        <Form>
+
+          <div className="px-2">
+            <FormSection label={t('account_and_amount')} fixedHeight={'full'}>
+              <div className="flex justify-evenly pb-3 border-b-2 border-gray-100">
+                <div className="text-center">
+                  <AccountSelect selected={selectedAccount} accounts={accounts} onClick={selectAccount} />
+                </div>
+                <div className="text-center">
+                  <FormMoneyInput value={amount} onChange={amountChange}/>
+                </div>
+                <div className="text-center mt-2">
+                  <ToggleButton onClick={() => setToggle(!toggle)} checked={toggle}
+                                checkedLabel={t('assets')} uncheckedLabel={t('debit')} id={'movement-type'}/>
+                </div>
+                <div className="text-center mt-2">
+                  <button className={`rounded shadow border border-gray-100 focus:outline-none focus:shadow-outline ${isAddEntryEnabled() ? '' : 'opacity-50 cursor-not-allowed'}`}
+                          onClick={addEntry} disabled={!isAddEntryEnabled()} type={'button'}>
+                    <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg"
+                         viewBox="0 0 20 20" fill="green" fillOpacity="0.5" strokeOpacity="0.8">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} fillRule="evenodd" clipRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                    </svg>
+                  </button>
+                </div>
               </div>
-              <div className="text-center">
-                <p className="font-medium">Haber Total</p><p>1000.00</p>
+              <div className="mt-3">
+                <TableV2 headers={headers} items={entries} displayFieldsName={selectedFields} onDelete={deleteEntry} onMove={moveEntry}/>
               </div>
-              <div className="text-center">
-                <p className="font-medium">Diferencia</p><p>50.50</p>
-              </div>
-            </div>
+            </FormSection>
           </div>
-          <div className="pt-3 text-right border-t border-gray-300">
-            <FormSubmit disabled={true}>
-              <p>Agregar Asiento</p>
-            </FormSubmit>
+
+          <div className="mt-5 px-2 py-5 border-t border-gray-300">
+            <FormSection label={t('details')} fixedHeight={36}>
+              <textarea style={{ resize : 'none' }} rows={3} className="form-textarea block w-full h-full std-data-input"
+                        placeholder={t('insert_description_tooltip')} value={description} onChange={descriptionChange}/>
+            </FormSection>
           </div>
-        </FormSection>
-      </div>
+
+          <div className="px-2 py-5 border-t border-gray-300">
+            <FormSection label={t('summary')} fixedHeight={'full'}>
+              <div className="mb-3">
+                <div className="flex justify-evenly">
+                  <div className="text-center">
+                    <p className="font-medium">{t('total_debit')}</p><p>{numberFormatter.format(debitTotal)}</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="font-medium">{t('total_assets')}</p><p>{numberFormatter.format(assetsTotal)}</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="font-medium">{t('total_diff')}</p><p>{numberFormatter.format((assetsTotal - debitTotal))}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="pt-3 flex flex-row-reverse text-right border-t border-gray-300">
+                <FormSubmit disabled={!isSubmitEnabled()}>
+                  <p>{t('add_entry')}</p>
+                </FormSubmit>
+              </div>
+            </FormSection>
+          </div>
+
+        </Form>
+      </Formik>
     </Navbar>
   );
 }
 
 export const getServerSideProps: GetServerSideProps = withSecureAccess(async (context) => {
-  const prisma = new PrismaClient();
-  const accounts = await prisma.accounts.findMany({
-    where: { abstract_account: false },
-    include: {
-      account_types: true
-    }
-  });
-
-  const groupedAccounts = accounts.reduce((grouped, item) => {
-    (grouped[item['account_types'].name] = grouped[item['account_types'].name] || []).push(item);
-    return grouped;
-  }, {});
-
+  const groupedAccounts = await getGroupedAccounts({ abstract_account: false }, { account_balance: 'desc' });
   return {
     props: { accounts: groupedAccounts },
   };
-
 }, null);

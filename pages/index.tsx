@@ -88,8 +88,8 @@ export default function Home() {
               <ul className="md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-10">
                 {cards.map((card, index) => {
                   return (
-                    <Link href={card.href}>
-                      <li className="mt-10 md:mt-0 cursor-pointer" key={`card-${index}`}>
+                    <Link href={card.href} key={`card-${index}`}>
+                      <li className="mt-10 md:mt-0 cursor-pointer">
                         <div className="flex hover:shadow-outline">
                           <div className="flex-shrink-0">
                             <div className="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">

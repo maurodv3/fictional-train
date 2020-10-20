@@ -75,9 +75,9 @@ export default function Navbar({ children, tabs, withHeader, displayName } :
                   <div>
                     <button className="max-w-xs flex items-center text-sm rounded-full text-white focus:outline-none focus:shadow-solid"
                             id="user-menu" aria-label="User menu" aria-haspopup="true" onClick={handleUserMenuOpen}>
-                      <img className="h-8 w-8 rounded-full"
-                           src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                           alt=""/>
+                      <svg className="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
                     </button>
                   </div>
                   <Transition
@@ -121,9 +121,9 @@ export default function Navbar({ children, tabs, withHeader, displayName } :
             <div className="pt-4 pb-3 border-t border-gray-700">
               <div className="flex items-center px-5 space-x-3">
                 <div className="flex-shrink-0">
-                  <img className="h-10 w-10 rounded-full"
-                       src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                       alt=""/>
+                  <svg className="h-10 w-10" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
                 </div>
                 <div className="space-y-1">
                   <div className="text-base font-medium leading-none text-white">{ displayName ? displayName : 'undefined' }</div>
@@ -141,7 +141,7 @@ export default function Navbar({ children, tabs, withHeader, displayName } :
       { withHeader ?
         <header className="bg-white shadow">
           <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <h1 className="text-3xl font-bold leading-tight text-gray-900">
+            <h1 className="text-2xl font-bold leading-tight text-gray-900">
               { withHeader }
             </h1>
           </div>

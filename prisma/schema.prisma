@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["transactionApi"]
 }
 
 datasource db {
@@ -8,48 +9,73 @@ datasource db {
 }
 
 model users {
-  user_id       Int    @default(autoincrement()) @id
-  username      String @unique
+  user_id       Int     @id @default(autoincrement())
+  username      String  @unique
+  display_name  String?
+  email         String
   password_hash String
   role_id       Int?
-  roles         roles? @relation(fields: [role_id], references: [role_id])
+  roles         roles?  @relation(fields: [role_id], references: [role_id])
 }
 
 model account_types {
-  account_type_id Int        @default(autoincrement()) @id
+  account_type_id Int        @id @default(autoincrement())
   name            String
   accounts        accounts[]
 }
 
 model accounts {
-  account_id        Int            @default(autoincrement()) @id
+  account_id        Int                @id @default(autoincrement())
   name              String
   abstract_account  Boolean
   account_type_id   Int?
   account_balance   Float?
   parent_account_id Int?
-  account_types     account_types? @relation(fields: [account_type_id], references: [account_type_id])
-  accounts          accounts?      @relation("accountsToaccounts_parent_account_id", fields: [parent_account_id], references: [account_id])
-  other_accounts    accounts[]     @relation("accountsToaccounts_parent_account_id")
+  enabled           Boolean            @default(true)
+  account_types     account_types?     @relation(fields: [account_type_id], references: [account_type_id])
+  accounts          accounts?          @relation("accountsToaccounts_parent_account_id", fields: [parent_account_id], references: [account_id])
+  other_accounts    accounts[]         @relation("accountsToaccounts_parent_account_id")
+  entry_seat_lines  entry_seat_lines[]
 }
 
 model actions {
-  action_id     Int             @default(autoincrement()) @id
+  action_id     Int             @id @default(autoincrement())
   name          String          @unique
   roles_actions roles_actions[]
 }
 
 model roles {
-  role_id       Int             @default(autoincrement()) @id
+  role_id       Int             @id @default(autoincrement())
   name          String          @unique
   roles_actions roles_actions[]
   users         users[]
 }
 
 model roles_actions {
-  id        Int      @default(autoincrement()) @id
+  id        Int      @id @default(autoincrement())
   role_id   Int?
   action_id Int?
   actions   actions? @relation(fields: [action_id], references: [action_id])
   roles     roles?   @relation(fields: [role_id], references: [role_id])
+}
+
+model entry_seat_lines {
+  entry_seat_line_id Int         @id @default(autoincrement())
+  position           Int
+  account_id         Int
+  entry_seat_id      Int
+  assets             Float?
+  debit              Float?
+  accounts           accounts    @relation(fields: [account_id], references: [account_id])
+  entry_seats        entry_seats @relation(fields: [entry_seat_id], references: [entry_seat_id])
+
+  @@unique([entry_seat_id, position], name: "unique_position")
+}
+
+model entry_seats {
+  entry_seat_id    Int                @id @default(autoincrement())
+  creation_date    DateTime
+  description      String
+  operation_type   String
+  entry_seat_lines entry_seat_lines[]
 }
