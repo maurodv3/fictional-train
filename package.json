@@ -18,7 +18,7 @@
     "formik": "^2.1.5",
     "i18next": "^19.8.1",
     "isomorphic-unfetch": "^3.0.0",
-    "next": "9.5.2",
+    "next": "9.5.5",
     "next-iron-session": "^4.1.8",
     "react": "16.13.1",
     "react-datepicker": "^3.3.0",
