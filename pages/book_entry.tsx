@@ -198,7 +198,7 @@ export default function BookEntry({ accounts }) {
                     <p className="font-medium">{t('total_assets')}</p><p>{numberFormatter.format(assetsTotal)}</p>
                   </div>
                   <div className="text-center">
-                    <p className="font-medium">{t('total_diff')}</p><p>{numberFormatter.format((assetsTotal - debitTotal))}</p>
+                    <p className="font-medium">{t('total_diff')}</p><p>{numberFormatter.format(Math.abs(assetsTotal - debitTotal))}</p>
                   </div>
                 </div>
               </div>
@@ -217,7 +217,20 @@ export default function BookEntry({ accounts }) {
 }
 
 export const getServerSideProps: GetServerSideProps = withSecureAccess(async (context) => {
-  const groupedAccounts = await getGroupedAccounts({ abstract_account: false }, { account_balance: 'desc' });
+  const groupedAccounts = await getGroupedAccounts(
+    {
+      AND: [
+        {
+          abstract_account: false
+        },
+        {
+          enabled: true
+        }
+      ]
+    },
+    {
+      account_balance: 'desc'
+    });
   return {
     props: { accounts: groupedAccounts },
   };

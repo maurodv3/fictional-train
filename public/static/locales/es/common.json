@@ -37,6 +37,7 @@
   "summary": "Resumen",
   "assets": "Haber",
   "debit": "Debe",
+  "balance": "Saldo",
   "total_assets": "Haber total",
   "total_debit": "Debe total",
   "total_diff": "Diferencia",
@@ -51,10 +52,50 @@
   "select_account": "Seleccionar Cuenta",
   "search_placeholder": "Buscar...",
 
-
+  "account.list": "Cuentas",
+  "account.list.theader.number": "Nº",
+  "account.list.theader.name": "Nombre",
+  "account.list.theader.balance": "Saldo actual",
+  "account.list.theader.abstract": "Recibe Saldo",
+  "account.list.theader.status": "Estado",
 
   "account.entry.add": "Agregar cuenta",
   "account.entry.account.name": "Nombre de cuenta",
-  "account.entry.account.name.placeholder": "Nombre de cuenta"
+  "account.entry.account.name.placeholder": "Nombre de cuenta",
+  "account.success": "La cuenta se agrego correctamente.",
+  "account.error": "La cuenta no se puedo agregar.",
+  "account.abstract.yes": "SI",
+  "account.abstract.no": "NO",
+  "account.active": "Activa",
+  "account.inactive": "Inactiva",
+  "account.parent": "Cuenta Padre",
+  "account.type": "Tipo cuenta",
+  "account.abstract": "Recibe Saldo",
+
+  "book.account.movements": "Cuentas con movimientos",
+  "book.account.no.movements": "Cuentas que no registran movimiento",
+  "book.account.no.movement": "La cuenta no registra movimientos",
+  "book.no.results.found": "No se encontraron resultados.",
+  "book.detail.theader.number": "Nº",
+  "book.detail.theader.name": "Nombre de cuenta",
+  "book.detail.theader.balance": "Saldo actual",
+
+  "book.daily.detail.theader.number": "Nº",
+  "book.daily.detail.theader.date": "Fecha",
+  "book.daily.detail.theader.detail": "Detalle",
+  "book.daily.detail.theader.name": "Cuenta",
+  "book.daily.detail.theader.debit": "Debe",
+  "book.daily.detail.theader.assets": "Haber",
+  "book.daily.detail.theader.optType": "Tipo",
+
+  "book.master": "Mayor",
+  "book.daily": "Diario",
+
+  "book.search.bar.book": "Libro",
+  "book.search.bar.date.from": "Desde",
+  "book.search.bar.date.to": "Hasta",
+  "book.search.bar.account": "Cuenta",
+  "book.search.bar.export.tooltip": "Exportar a PDF"
+
 
 }

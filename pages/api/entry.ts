@@ -41,10 +41,9 @@ export default withSession(async (request, response) => {
   }
 
   if (errors.length !== 0) {
-    response.status(400).json({
+    return response.status(400).json({
       msg: [...errors]
     });
-    return;
   }
 
   const lines = entries.map((entry, index) => {
@@ -86,6 +85,6 @@ export default withSession(async (request, response) => {
 
   await prisma.$transaction(updates);
 
-  response.json({ msg: 'entry.success' });
+  return response.json({ msg: 'entry.success' });
 
 });

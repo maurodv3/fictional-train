@@ -48,11 +48,12 @@ function Options({ options, onClick }) {
   );
 }
 
-export default function AccountSelect({ selected, accounts, onClick } :
+export default function AccountSelect({ selected, accounts, onClick, showRemove = false } :
   {
     selected: Account;
     accounts : Record<string, Account[]>;
     onClick: (a: any) => void;
+    showRemove?:boolean;
   }) {
 
   const [t] = useTranslation();
@@ -90,6 +91,7 @@ export default function AccountSelect({ selected, accounts, onClick } :
     const selectedAccountType = e.target.getAttribute('data-account-type');
     const selectedAccountId = e.target.getAttribute('data-id');
     const selectedAccount = accounts[selectedAccountType].filter(account => `${account.account_id}` === selectedAccountId)[0];
+    setResults(Object.entries(accounts));
     // Delegate to parent
     onClick(selectedAccount);
   };
@@ -100,12 +102,18 @@ export default function AccountSelect({ selected, accounts, onClick } :
         <span className="rounded-md shadow-sm">
           <button type="button" className="inline-flex justify-center w-64 px-4 py-2 text-sm font-medium leading-5 transition ease-in-out duration-150 std-data-input bg-white"
                   id="options-dropdown" aria-haspopup="true" aria-expanded="true" onClick={e => setOpen(!open)} >
-            { selected ? accountDisplayName(selected) : t('select_account')}
+            <p className="truncate">{ selected ? accountDisplayName(selected) : t('select_account')}</p>
             <svg className="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
             </svg>
           </button>
         </span>
+        { selected && showRemove ? (
+          <svg className="float-right w-5 h-5 ml-2 mt-2 text-indigo-500 border-gray-300 cursor-pointer"  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+               stroke="currentColor" onClick={() => onClick(null)}>
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414a2 2 0 001.414.586H19a2 2 0 002-2V7a2 2 0 00-2-2h-8.172a2 2 0 00-1.414.586L3 12z" />
+          </svg>
+        ) : null }
       </div>
       <Transition
         enter={'transition ease-out duration-100'}
@@ -114,7 +122,7 @@ export default function AccountSelect({ selected, accounts, onClick } :
         leave={'transition ease-in duration-75'}
         leaveFrom={'transform opacity-100 scale-100'}
         leaveTo={'transform opacity-0 scale-95'} show={open}>
-        <div className="origin-top-right absolute right-0 mt-2 mb-2 w-64 rounded-md shadow-lg z-10">
+        <div className="origin-top-left absolute left-0 mt-2 mb-2 w-64 rounded-md shadow-lg z-10">
           <div className="rounded-md bg-white shadow-xs" aria-orientation="vertical">
             <div className="px-3 py-3 relative mx-auto text-gray-600">
               <input className="w-full border-2 border-gray-300 bg-white h-10 px-2 pr-8 rounded text-sm focus:outline-none" autoComplete="off"

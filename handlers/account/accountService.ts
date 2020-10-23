@@ -22,6 +22,17 @@ export async function createAccount(account: Account) {
   });
 }
 
+export async function updateAccountStatus(accountId: number, accountStatus: boolean) {
+  await prisma.accounts.update({
+    where: {
+      account_id: accountId
+    },
+    data: {
+      enabled: accountStatus
+    }
+  });
+}
+
 export async function getAccounts(where?: object, orderBy?: object) : Promise<Account[]> {
   return await prisma.accounts.findMany({
     where,

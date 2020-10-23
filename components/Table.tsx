@@ -5,7 +5,7 @@ export default function Table({ headers, values, selectedFields } :
     selectedFields: string[],
   }) {
   return (
-    <table className="table-auto w-full">
+    <table className="table-fixed w-full">
       <TableHeader headers={headers}/>
       <tbody>
         {values.map((value: object, index: number) =>
@@ -29,7 +29,7 @@ function TableHeader({ headers } : {
     <thead>
       <tr key={'table-header'}>
         {headers.map((header: string) =>
-          <th className="px-4 py-2" key={header}>
+          <th className="truncate text-left px-4 py-1" key={header}>
             {header}
           </th>,
         )}
@@ -62,7 +62,7 @@ function RowField({ index, value } : {
   value: string,
 }) {
   return (
-    <td key={index} className="border px-4 py-2">
+    <td key={index} className="border px-4 py-1">
       {value}
     </td>
   );

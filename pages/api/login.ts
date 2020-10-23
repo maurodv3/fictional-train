@@ -21,8 +21,7 @@ export default withSession(async (request, response) => {
   });
 
   if (user === undefined || user === null) {
-    response.status(401).json({ isLoggedIn: false });
-    return;
+    return response.status(401).json({ isLoggedIn: false });
   }
 
   if (user.password_hash === password) {
@@ -35,10 +34,9 @@ export default withSession(async (request, response) => {
     };
     request.session.set('user', logged);
     await request.session.save();
-    response.json(logged);
-    return;
+    return response.json(logged);
   }
 
-  response.status(401).json({ isLoggedIn: false });
+  return response.status(401).json({ isLoggedIn: false });
 
 });

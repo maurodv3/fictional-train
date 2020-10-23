@@ -1,11 +1,18 @@
 import { GetServerSideProps } from 'next';
 import withSecureAccess from '../lib/secured';
 import Navbar, { TabInfo } from '../components/Navbar';
-import prisma  from '../prisma/prisma';
 import { subMonths } from 'date-fns';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import es from 'date-fns/locale/es';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { getDailyBook, getMasterBook } from '../handlers/book/bookService';
+import { getAccounts, groupAccounts } from '../handlers/account/accountService';
+import AccountSelect from '../components/AccountSelect';
+import DailyBookTable from '../components/DailyBookTable';
+import { useTranslation } from 'react-i18next';
+import Table from '../components/Table';
+import Account from '../handlers/account/Account';
+import fetch from 'isomorphic-unfetch';
 
 const tabs : TabInfo[] = [
   { name: 'tab_actions', href: '/', active: false },
@@ -14,122 +21,210 @@ const tabs : TabInfo[] = [
   { name: 'tab_accounts', href: '/account', active: false }
 ];
 
-function BookTable({ headers, entry, operations, startGroup, endGroup, optGroup }) {
+function MasterBookTable({ masterBook }) {
+
+  const [t] = useTranslation();
 
   return (
-    <table className="table-auto w-full">
-      <thead>
-        <tr>
-          { headers.map(header => <th className="border px-4 py-2">{header}</th>) }
-        </tr>
-      </thead>
-      <tbody>
-      { operations.map((operation, index) => {
+    <div>
+      <p className="text-md font-bold mb-3 mt-3 ml-2">{t('book.account.movements')}</p>
+      { masterBook.summary.map((accountSummary) => {
         return (
-          index === 0 ? (
-          <tr>
-            { startGroup.map(field => <td className="border px-2 py-1" rowSpan={operations.length}>{entry[field]}</td>) }
-            { optGroup.map(field => <td className="border px-2 py-1">{operation[field]}</td>) }
-            { endGroup.map(field => <td className="border px-2 py-1" rowSpan={operations.length}>{entry[field]}</td>) }
-          </tr>
-          ) : (
-            <tr>
-              { optGroup.map(field => <td className="border px-2 py-1">{operation[field]}</td>) }
-            </tr>
-          )
+          <div>
+            <Table
+              headers={[`${accountSummary.account.name} (${accountSummary.account.account_id})`, t('debit'), t('assets'), t('balance')]}
+              values={accountSummary.summary}
+              selectedFields={['description', 'debit', 'assets', 'balance']}
+            />
+            <br/>
+          </div>
         );
       })}
-      </tbody>
-    </table>
+      <p className="text-md font-bold mb-3 mt-3 ml-2">{t('book.account.no.movements')}</p>
+      <Table headers={[t('book.detail.theader.number'), t('book.detail.theader.name'), t('book.detail.theader.balance')]}
+             values={masterBook.withoutMovement} selectedFields={['account_id', 'name', 'account_balance']}/>
+    </div>
   );
 }
 
-export default function Book({ results, from, to }) {
+export default function Book({ accounts, groupedAccounts, initialDailyBook, initialMasterBook, from, to }) {
 
   registerLocale('es', es);
-  const [selectedBook, setSelectedBook] = useState('Diario');
+  const [t] = useTranslation();
+
+  const dailyBookHeader = [
+    t('book.daily.detail.theader.number'),
+    t('book.daily.detail.theader.date'),
+    t('book.daily.detail.theader.detail'),
+    t('book.daily.detail.theader.name'),
+    t('book.daily.detail.theader.debit'),
+    t('book.daily.detail.theader.assets'),
+    t('book.daily.detail.theader.optType')
+  ];
+  const dailyType = t('book.daily');
+  const masterType = t('book.master');
+
+  const [selectedBook, setSelectedBook] = useState(dailyType);
+  const [selectedAccount, setSelectedAccount] = useState<Account>();
+  const [selectedSummarizedAccount, setSelectedSummarizedAccount] = useState();
   const [fromDate, setFromDate] = useState(new Date(from));
   const [toDate, setToDate] = useState(new Date(to));
+  const [dailyBook, setDailyBook] = useState(initialDailyBook);
+  const [masterBook, setMasterBook] = useState(initialMasterBook);
 
-  const changeFrom = date => setFromDate(date);
-  const changeTo = date => setToDate(date);
+  const dateChanged = async () => {
+    await fetch(`/api/book?${new URLSearchParams({ from: fromDate.toISOString(), to: toDate.toISOString() })}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    }).then((response) => {
+      if (response.status === 200) {
+        response.json().then((res) => {
+          setMasterBook(res.masterBook);
+          setDailyBook(res.dailyBook);
+        });
+      } else {
+        response.json().then(console.log);
+      }
+    });
+  };
+
+  useEffect(() => {
+    dateChanged();
+  }, [fromDate, toDate]);
+
+  const selectAccount = (account: Account) => {
+    setSelectedAccount(account);
+    if (account === null) {
+      return;
+    }
+    const summarizedAccount = masterBook.summary.filter(sum => sum.account.account_id === account.account_id)[0];
+    if (summarizedAccount) {
+      setSelectedSummarizedAccount(summarizedAccount);
+    } else {
+      setSelectedSummarizedAccount(null);
+    }
+  };
+
+  const changeFrom = (date) => {
+    setFromDate(date);
+  };
+  const changeTo = (date) => {
+    setToDate(date);
+  };
+
+  const findAccount = (accountId) => {
+    return accounts.filter(account => account.account_id === accountId)[0];
+  };
+
+  const mappers = {
+    account_id: (accountId) => {
+      const acc = findAccount(accountId);
+      return `${acc.name} (${acc.account_id})`;
+    }
+  };
 
   return (
     <Navbar tabs={tabs}>
-      <div className="mb-5 border border-gray-100 rounded-md shadow-md bg-white">
+      <div className="mb-5 relative border border-gray-100 rounded-md shadow-md bg-white">
         <div className="flex h-24 rounded-sm px-4 py-4">
           <div className="mx-5">
-            <p className="text-sm text-gray-700 font-bold mb-2">Libro</p>
-            <select className="px-3 py-2 w-36 std-data-input capitalize text-sm text-gray-700"
+            <p className="text-sm text-gray-700 font-bold mb-2">{t('book.search.bar.book')}</p>
+            <select className="px-3 py-2 w-36 std-data-input capitalize text-md text-gray-700"
                     value={selectedBook} onChange={e => setSelectedBook(e.target.value)}>
-              <option>Diario</option>
-              <option>Mayor</option>
+              <option>{dailyType}</option>
+              <option>{masterType}</option>
             </select>
           </div>
           <div className="mx-5">
-            <p className="text-sm text-gray-700 font-bold mb-2">Desde</p>
-            <DatePicker className="w-full py-2 px-3 std-data-input text-sm text-gray-700"
+            <p className="text-sm text-gray-700 font-bold mb-2">{t('book.search.bar.date.from')}</p>
+            <DatePicker className="w-full py-2 px-3 std-data-input text-md text-gray-700"
                         locale="es" dateFormat="dd/MM/yyyy" selected={fromDate} onChange={changeFrom} />
           </div>
           <div className="mx-5">
-            <p className="text-sm text-gray-700 font-bold mb-2">Hasta</p>
-            <DatePicker className="w-full py-2 px-3 std-data-input text-sm text-gray-700"
+            <p className="text-sm text-gray-700 font-bold mb-2">{t('book.search.bar.date.to')}</p>
+            <DatePicker className="w-full py-2 px-3 std-data-input text-md text-gray-700"
                         locale="es" dateFormat="dd/MM/yyyy" selected={toDate} onChange={changeTo} />
           </div>
-          { selectedBook === 'Mayor' ? (
+          { selectedBook === masterType ? (
             <div className="mx-5">
-              <p className="text-sm text-gray-700 font-bold mb-2">Cuenta</p>
-              <select className="px-3 py-2 w-36 std-data-input capitalize text-sm text-gray-700">
-                <option>Caja</option>
-              </select>
+              <p className="text-sm text-gray-700 font-bold mb-2">{t('book.search.bar.account')}</p>
+              <AccountSelect selected={selectedAccount} accounts={groupedAccounts} onClick={selectAccount} showRemove={true}/>
             </div>
           ) : null }
         </div>
+        <div className="absolute top-2 right-4 h-8 w-8 text-center">
+          <button className="border border-gray-300 rounded-full bg-indigo-500 h-10 w-10 p-2 focus:outline-none focus:shadow-outline hover:bg-indigo-700" title={t('book.search.bar.export.tooltip')}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="whitesmoke">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-7a2 2 0 012-2h2m3-4H9a2 2 0 00-2 2v7a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-1m-1 4l-3 3m0 0l-3-3m3 3V3" />
+            </svg>
+          </button>
+        </div>
       </div>
-      <BookTable headers={['Numero', 'Detalle', 'Fecha', 'Cuenta', 'Debe', 'Haber', 'Tipo']}
-                 startGroup={['id', 'date', 'details']}
-                 endGroup={['type']}
-                 entry={{
-                   id: '1',
-                   details: 'Venta a credito',
-                   date: '14/10/2020',
-                   type: 'Modificativa',
-                 }}
-                 operations={[
-                   { account: 'Deudas por ventas', debit: 120000, assets: null },
-                   { account: 'Venta', debit: null, assets: 120000 },
-                   { account: 'CMV', debit: 80000, assets: null },
-                   { account: 'Mercaderias', debit: null, assets: 80000 },
-                 ]}
-                 optGroup={['account', 'debit', 'assets']}
-      />
+      { selectedBook === dailyType ? (
+        dailyBook && dailyBook.length !== 0 ? (
+          <DailyBookTable
+            headers={dailyBookHeader}
+            startGroup={['entry_seat_id', 'date', 'description']}
+            endGroup={['operation_type']}
+            entries={dailyBook}
+            optGroup={['account_id', 'debit', 'assets']}
+            mappers={mappers}
+          />
+        ) : (
+          <div className="text-center">
+            <p className="pt-5 font-medium">{t('book.no.results.found')}</p>
+          </div>
+        )
+      ) : null }
+      { selectedBook === masterType ? (
+          selectedAccount ? (
+            selectedSummarizedAccount ? (
+              <div>
+                <Table
+                  /*@ts-ignore*/
+                  headers={[`${selectedSummarizedAccount.account.name} (${selectedSummarizedAccount.account.account_id})`, 'Debe', 'Haber', 'Saldo']}
+                  /*@ts-ignore*/
+                  values={selectedSummarizedAccount.summary}
+                  selectedFields={['description', 'debit', 'assets', 'balance']}
+                />
+              </div>
+              ) : (
+                <div>
+                  <p className="text-md font-bold mb-3 mt-3 ml-2">{t('book.account.no.movement')}</p>
+                  <Table headers={[t('book.detail.theader.number'), t('book.detail.theader.name'), t('book.detail.theader.balance')]}
+                         values={[selectedAccount]} selectedFields={['account_id', 'name', 'account_balance']}/>
+                </div>
+              )
+            ) : (
+              <MasterBookTable masterBook={masterBook}/>
+            )
+      ) : null }
     </Navbar>
   );
 }
 
 export const getServerSideProps: GetServerSideProps = withSecureAccess(async (context) => {
+
+  const accounts = await getAccounts();
+  const groupedAccounts = groupAccounts(accounts);
+
   const defaultFrom = subMonths(new Date(), 1);
   const defaultTo = new Date();
-  const results = await prisma.entry_seats.findMany({
-    where: {
-      AND: [
-        {
-          creation_date: {
-            gte: defaultFrom
-          }
-        },
-        {
-          creation_date: {
-            lte: defaultTo
-          }
-        }
-      ]
-    },
-    include: {
-      entry_seat_lines: true
-    }
-  });
+  const dailyBook = await getDailyBook(defaultFrom, defaultTo);
+  const masterBook = await getMasterBook(defaultFrom, defaultTo);
+
   return {
-    props: { from: defaultFrom.toDateString(), to: defaultTo.toDateString(), results: JSON.stringify(results) },
+    props: {
+      masterBook,
+      accounts,
+      groupedAccounts,
+      from: defaultFrom.toDateString(),
+      to: defaultTo.toDateString(),
+      dailyBook: dailyBook.map((entry) => {
+        entry['date'] = entry.creation_date.toLocaleString();
+        delete entry.creation_date;
+        return entry;
+      })
+    },
   };
 }, null);

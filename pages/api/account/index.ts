@@ -1,7 +1,9 @@
 import withSession from '../../../lib/session';
-import { createAccount } from '../../../handlers/account/accountService';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { createAccount, getAccounts, groupAccounts } from '../../../handlers/account/accountService';
 
-export default withSession(async (request, response) => {
+const POST = async (request: NextApiRequest, response: NextApiResponse) => {
+
   const payload : {
     accountName: string;
     accountType: string;
@@ -23,8 +25,42 @@ export default withSession(async (request, response) => {
       account_id: 0,
       account_types: undefined,
     });
-    response.json({});
-  } else {
-    response.json({});
+
+    const accounts = await getAccounts(undefined, { name: 'asc' });
+    return response
+      .status(201)
+      .json({
+        accounts,
+        grouped: groupAccounts(accounts)
+      });
   }
+
+  return response.status(400).json({ msg: 'Not allowed yet' });
+
+};
+
+const GET = async (request: NextApiRequest, response: NextApiResponse) => {
+  return response.status(201).json(await getAccounts(undefined, { name: 'asc' }));
+};
+
+const method = {
+  POST,
+  GET,
+};
+
+export default withSession(async (request: NextApiRequest, response: NextApiResponse) => {
+
+  if (!request) {
+    response.status(400).json({ msg: 'Invalid request.' });
+    return;
+  }
+  
+  const handler = method[request.method];
+  
+  if (handler) {
+    return handler(request, response);
+  }
+
+  return response.status(405).json({ msg: 'Not Allowed.' });
+
 });
