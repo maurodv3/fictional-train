@@ -56,7 +56,7 @@ export default function Navbar({ children, tabs, withHeader, displayName } :
 
   return (
     <div>
-      <nav className="bg-gray-800">
+      <nav className="bg-gray-800 no-print">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
@@ -89,10 +89,17 @@ export default function Navbar({ children, tabs, withHeader, displayName } :
                     leaveTo={'transform opacity-0 scale-95'}
                     show={userMenuIsOpen}
                   >
-                    <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg">
+                    <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg z-10">
                       <div className="py-1 rounded-md bg-white shadow-xs" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
+                        <Link href="/about">
+                          <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                            {t('about')}
+                          </a>
+                        </Link>
                         <Link href="/logout">
-                          <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">{t('logout')}</a>
+                          <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-t border-gray-200" role="menuitem">
+                            {t('logout')}
+                          </a>
                         </Link>
                       </div>
                     </div>

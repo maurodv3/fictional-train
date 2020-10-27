@@ -12,7 +12,7 @@ export default function MasterBookTable({ masterBook }) {
 
   return (
     <div>
-      <p className="text-md font-bold mb-3 mt-3 ml-2">{t('book.account.movements')}</p>
+      <p className="text-md font-bold mb-3 mt-3 ml-2 border-b border-indigo-700">{t('book.account.movements')}</p>
       { masterBook.summary.map((accountSummary) => {
         return (
           <div key={`summary-${accountSummary.account.account_id}`}>
@@ -25,7 +25,12 @@ export default function MasterBookTable({ masterBook }) {
           </div>
         );
       })}
-      <p className="text-md font-bold mb-3 mt-3 ml-2">{t('book.account.no.movements')}</p>
+      { masterBook.summary.length === 0 ? (
+        <div className="text-center">
+          <p className="text-md">{t('book.no.results.found')}</p>
+        </div>
+      ) : null }
+      <p className="text-md font-bold mb-3 mt-3 ml-2 border-b border-indigo-700">{t('book.account.no.movements')}</p>
       <Table headers={headers} values={masterBook.withoutMovement} selectedFields={['account_id', 'name', 'account_balance']}/>
     </div>
   );

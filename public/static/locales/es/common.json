@@ -2,6 +2,7 @@
   "brand_name": "Balbinator 3000",
   "logout": "Cerrar sesión",
   "copyright": "© 2020 Mauro Vidal",
+  "about": "Acerca de",
 
   "login": "Iniciar Sesión",
   "login_username_field": "Usuario",
@@ -95,7 +96,10 @@
   "book.search.bar.date.from": "Desde",
   "book.search.bar.date.to": "Hasta",
   "book.search.bar.account": "Cuenta",
-  "book.search.bar.export.tooltip": "Exportar a PDF"
+  "book.search.bar.export.tooltip": "Exportar a PDF",
 
+  "book.print.company.name": "Empresa: {{company}}.",
+  "book.print.from.to": "Desde: {{from}} Hasta: {{to}}.",
+  "book.print.selected.book": "Libro: {{selectedBook}}."
 
 }

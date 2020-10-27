@@ -100,7 +100,12 @@ export default function Book({ accounts, groupedAccounts, initialDailyBook, init
 
   return (
     <Navbar tabs={tabs}>
-      <div className="mb-5 relative border border-gray-100 rounded-md shadow-md bg-white">
+      <div className="mb-5 print-only text-md font-bold">
+        <p>{t('book.print.company.name', { company: 'Chibal S.A' })}</p>
+        <p>{t('book.print.from.to', { from: fromDate.toLocaleDateString(), to: toDate.toLocaleDateString() })}</p>
+        <p>{t('book.print.selected.book', { selectedBook })}</p>
+      </div>
+      <div className="mb-5 relative border border-gray-100 rounded-md shadow-md bg-white no-print">
         <div className="flex h-24 rounded-sm px-4 py-4">
           <div className="mx-5">
             <p className="text-sm text-gray-700 font-bold mb-2">{t('book.search.bar.book')}</p>
@@ -113,12 +118,26 @@ export default function Book({ accounts, groupedAccounts, initialDailyBook, init
           <div className="mx-5">
             <p className="text-sm text-gray-700 font-bold mb-2">{t('book.search.bar.date.from')}</p>
             <DatePicker className="w-full py-2 px-3 std-data-input text-md text-gray-700"
-                        locale="es" dateFormat="dd/MM/yyyy" selected={fromDate} onChange={changeFrom} />
+                        locale="es" dateFormat="dd/MM/yyyy"
+                        selected={fromDate}
+                        onChange={changeFrom}
+                        selectsStart
+                        startDate={fromDate}
+                        endDate={toDate}
+                        maxDate={toDate}
+            />
           </div>
           <div className="mx-5">
             <p className="text-sm text-gray-700 font-bold mb-2">{t('book.search.bar.date.to')}</p>
             <DatePicker className="w-full py-2 px-3 std-data-input text-md text-gray-700"
-                        locale="es" dateFormat="dd/MM/yyyy" selected={toDate} onChange={changeTo} />
+                        locale="es" dateFormat="dd/MM/yyyy"
+                        selected={toDate}
+                        onChange={changeTo}
+                        selectsEnd
+                        startDate={fromDate}
+                        endDate={toDate}
+                        minDate={fromDate}
+            />
           </div>
           { selectedBook === masterType ? (
             <div className="mx-5">
@@ -128,7 +147,8 @@ export default function Book({ accounts, groupedAccounts, initialDailyBook, init
           ) : null }
         </div>
         <div className="absolute top-2 right-4 h-8 w-8 text-center">
-          <button className="border border-gray-300 rounded-full bg-indigo-500 h-10 w-10 p-2 focus:outline-none focus:shadow-outline hover:bg-indigo-700" title={t('book.search.bar.export.tooltip')}>
+          <button className="border border-gray-300 rounded-full bg-indigo-500 h-10 w-10 p-2 focus:outline-none focus:shadow-outline hover:bg-indigo-700" title={t('book.search.bar.export.tooltip')}
+            onClick={() => window.print()}>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="whitesmoke">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-7a2 2 0 012-2h2m3-4H9a2 2 0 00-2 2v7a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-1m-1 4l-3 3m0 0l-3-3m3 3V3" />
             </svg>

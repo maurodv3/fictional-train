@@ -29,6 +29,19 @@ input[type=number] {
     -moz-appearance: textfield;
 }
 
+.print-only{
+    display: none;
+}
+
+@media print {
+    .no-print {
+        display: none;
+    }
+    .print-only {
+        display: block;
+    }
+}
+
 /* Start purging... */
 @tailwind utilities;
 /* Stop purging. */
