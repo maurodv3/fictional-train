@@ -26,13 +26,14 @@ const POST = async (request: NextApiRequest, response: NextApiResponse) => {
       account_types: undefined,
     });
 
-    const accounts = await getAccounts(undefined, { name: 'asc' });
+    const accounts = await getAccounts(undefined, { account_id: 'asc' });
     return response
       .status(201)
       .json({
         accounts,
         grouped: groupAccounts(accounts)
       });
+
   }
 
   return response.status(400).json({ msg: 'Not allowed yet' });

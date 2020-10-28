@@ -21,7 +21,7 @@ const tabs : TabInfo[] = [
   { name: 'tab_accounts', href: '/account', active: true }
 ];
 
-const selectedFields : string[] = ['account_id', 'name', 'account_balance', 'abstract_account', 'switch'];
+const selectedFields : string[] = ['account_id', 'name', 'type', 'account_balance', 'abstract_account', 'switch'];
 
 export default function Accounts({ initialAccounts, initialGroupedAccounts }) {
 
@@ -32,6 +32,7 @@ export default function Accounts({ initialAccounts, initialGroupedAccounts }) {
   const tableHeader : string[] = [
     t('account.list.theader.number'),
     t('account.list.theader.name'),
+    t('account.list.theader.type'),
     t('account.list.theader.balance'),
     t('account.list.theader.abstract'),
     t('account.list.theader.status')
@@ -46,6 +47,10 @@ export default function Accounts({ initialAccounts, initialGroupedAccounts }) {
   const [accountType, setAccountType] = useState('');
   const [selectedAccount, setSelectedAccount] = useState<Account>(null);
   const [abstractAccount, setAbstractAccount] = useState(false);
+
+  const capitalize = (text: string) => {
+    return text[0].toUpperCase() + text.slice(1, text.length).toLowerCase();
+  };
 
   const selectAccount = (account: Account) => {
     setSelectedAccount(account);
@@ -124,9 +129,9 @@ export default function Accounts({ initialAccounts, initialGroupedAccounts }) {
                     <div className="w-1/3 mr-5 pr-3">
                       <div className="mb-6">
                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="account_name">
-                          Nombre de cuenta
+                          {t('account.entry.account.name')}
                         </label>
-                        <input name="account_name" className="w-full py-2 px-3 std-data-input" placeholder="..." autoComplete="off"
+                        <input name="account_name" className="w-full py-2 px-3 std-data-input" placeholder="_ _ _ _ _" autoComplete="off"
                                onChange={e => setAccountName(e.target.value)}/>
                       </div>
                     </div>
@@ -139,10 +144,11 @@ export default function Accounts({ initialAccounts, initialGroupedAccounts }) {
                     <div className="w-1/3 pr-3">
                       <p className="text-sm text-gray-700 font-bold mb-2">{t('account.type')}</p>
                       <select className="capitalize std-data-input px-3 py-2 w-full text-sm text-gray-700"
-                              disabled={!!(selectedAccount)}
+                              // disabled={!!(selectedAccount)}
+                              disabled={true}
                               value={accountType}
                               onChange={selectAccountType}>
-                        <option>-</option>
+                        <option>_</option>
                         { Object.keys(groupedAccounts).map((group, index) => {
                           return (<option key={`account-type-${index}`} className="capitalize text-sm text-gray-700">{group.toLowerCase()}</option>);
                         })}
@@ -175,6 +181,7 @@ export default function Accounts({ initialAccounts, initialGroupedAccounts }) {
                      return {
                        account_id: account.account_id,
                        name: account.name,
+                       type: capitalize(account.account_types.name),
                        account_balance: numberFormatter.format(account.account_balance),
                        abstract_account: account.abstract_account ? t('account.abstract.no') : t('account.abstract.yes'),
                        switch: <ToggleButton id={`${account.account_id}-active-toggle`} checked={account.enabled}
@@ -190,7 +197,7 @@ export default function Accounts({ initialAccounts, initialGroupedAccounts }) {
 }
 
 export const getServerSideProps: GetServerSideProps = withSecureAccess(async (context) => {
-  const accounts = await getAccounts(undefined, { name: 'asc' });
+  const accounts = await getAccounts(undefined, { account_id: 'asc' });
   const groupedAccounts = groupAccounts(accounts);
   return {
     props: {

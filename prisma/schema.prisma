@@ -9,13 +9,16 @@ datasource db {
 }
 
 model users {
-  user_id       Int     @id @default(autoincrement())
-  username      String  @unique
-  display_name  String?
-  email         String
-  password_hash String
-  role_id       Int?
-  roles         roles?  @relation(fields: [role_id], references: [role_id])
+  user_id             Int                @id @default(autoincrement())
+  username            String             @unique
+  display_name        String?
+  email               String
+  password_hash       String
+  role_id             Int?
+  financial_entity_id Int
+  financial_entities  financial_entities @relation(fields: [financial_entity_id], references: [entity_id])
+  roles               roles?             @relation(fields: [role_id], references: [role_id])
+  entry_seats         entry_seats[]
 }
 
 model account_types {
@@ -31,7 +34,7 @@ model accounts {
   account_type_id   Int?
   account_balance   Float?
   parent_account_id Int?
-  enabled           Boolean            @default(true)
+  enabled           Boolean
   account_types     account_types?     @relation(fields: [account_type_id], references: [account_type_id])
   accounts          accounts?          @relation("accountsToaccounts_parent_account_id", fields: [parent_account_id], references: [account_id])
   other_accounts    accounts[]         @relation("accountsToaccounts_parent_account_id")
@@ -73,9 +76,45 @@ model entry_seat_lines {
 }
 
 model entry_seats {
-  entry_seat_id    Int                @id @default(autoincrement())
-  creation_date    DateTime
-  description      String
-  operation_type   String
-  entry_seat_lines entry_seat_lines[]
+  entry_seat_id       Int                @id @default(autoincrement())
+  creation_date       DateTime
+  description         String
+  operation_type      String
+  financial_period_id Int
+  created_by          Int?
+  users               users?             @relation(fields: [created_by], references: [user_id])
+  financial_period    financial_period   @relation(fields: [financial_period_id], references: [financial_period_id])
+  entry_seat_lines    entry_seat_lines[]
+}
+
+model entity_liable {
+  entity_liable_id   Int                @id @default(autoincrement())
+  entity_id          Int
+  first_name         String
+  last_name          String
+  email_address      String
+  financial_entities financial_entities @relation(fields: [entity_id], references: [entity_id])
+}
+
+model financial_entities {
+  entity_id        Int                @id @default(autoincrement())
+  identifier       String
+  address          String
+  phone_number     String
+  legal_name       String
+  display_name     String?
+  email_address    String
+  entity_liable    entity_liable[]
+  financial_period financial_period[]
+  users            users[]
+}
+
+model financial_period {
+  financial_period_id Int                @id @default(autoincrement())
+  financial_entity_id Int
+  period_name         String
+  period_start_date   DateTime
+  period_end_date     DateTime
+  financial_entities  financial_entities @relation(fields: [financial_entity_id], references: [entity_id])
+  entry_seats         entry_seats[]
 }

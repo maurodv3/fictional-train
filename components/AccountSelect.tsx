@@ -8,7 +8,7 @@ function accountDisplayName(account: Account) {
   return `${account.name} (${account.account_id})`;
 }
 
-function Options({ options, onClick }) {
+function Options({ options, onClick, showAddAccount }) {
 
   const [t] = useTranslation();
 
@@ -37,23 +37,26 @@ function Options({ options, onClick }) {
           </div>
         );
       })}
-      <div className="border-b border-t border-gray-200">
-        <Link href="/account">
-          <a className="block px-4 py-2 text-sm leading-5 text-gray-800 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900 cursor-pointer">
-            <p className="font-medium">{t('account.entry.add')}</p>
-          </a>
-        </Link>
-      </div>
+      { showAddAccount ? (
+        <div className="border-b border-t border-gray-200">
+          <Link href="/account">
+            <a className="block px-4 py-2 text-sm leading-5 text-gray-800 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900 cursor-pointer">
+              <p className="font-medium">{t('account.entry.add')}</p>
+            </a>
+          </Link>
+        </div>
+      ) : null }
     </div>
   );
 }
 
-export default function AccountSelect({ selected, accounts, onClick, showRemove = false } :
+export default function AccountSelect({ selected, accounts, onClick, showRemove = false, showAddAccount = false } :
   {
     selected: Account;
     accounts : Record<string, Account[]>;
     onClick: (a: any) => void;
     showRemove?:boolean;
+    showAddAccount?:boolean;
   }) {
 
   const [t] = useTranslation();
@@ -148,7 +151,7 @@ export default function AccountSelect({ selected, accounts, onClick, showRemove 
                 </svg>
               </button>
             </div>
-            <Options options={results} onClick={onClickWrapper}/>
+            <Options options={results} onClick={onClickWrapper} showAddAccount={showAddAccount}/>
           </div>
         </div>
       </Transition>

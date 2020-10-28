@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next';
 import withSecureAccess from '../lib/secured';
-import Navbar, { TabInfo } from '../components/Navbar';
+import Navbar from '../components/Navbar';
 import { subMonths } from 'date-fns';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import es from 'date-fns/locale/es';
@@ -14,15 +14,9 @@ import Table from '../components/Table';
 import Account from '../handlers/account/Account';
 import fetch from 'isomorphic-unfetch';
 import MasterBookTable from '../components/MasterBookTable';
+import {getNavTabs, getUserInfo} from '../handlers/user/userService';
 
-const tabs : TabInfo[] = [
-  { name: 'tab_actions', href: '/', active: false },
-  { name: 'tab_entries', href: '/book_entry', active: false },
-  { name: 'tab_books', href: '/book', active: true },
-  { name: 'tab_accounts', href: '/account', active: false }
-];
-
-export default function Book({ accounts, groupedAccounts, initialDailyBook, initialMasterBook, from, to }) {
+export default function Book({ tabs, accounts, groupedAccounts, initialDailyBook, initialMasterBook, from, to, company }) {
 
   registerLocale('es', es);
   const [t] = useTranslation();
@@ -101,9 +95,10 @@ export default function Book({ accounts, groupedAccounts, initialDailyBook, init
   return (
     <Navbar tabs={tabs}>
       <div className="mb-5 print-only text-md font-bold">
-        <p>{t('book.print.company.name', { company: 'Chibal S.A' })}</p>
-        <p>{t('book.print.from.to', { from: fromDate.toLocaleDateString(), to: toDate.toLocaleDateString() })}</p>
+        <p>{t('book.print.company.name', { company: company.legal_name })}</p>
         <p>{t('book.print.selected.book', { selectedBook })}</p>
+        <p>{t('book.print.period', { period: '2020' })}</p>
+        <p>{t('book.print.from.to', { from: fromDate.toLocaleDateString(), to: toDate.toLocaleDateString() })}</p>
       </div>
       <div className="mb-5 relative border border-gray-100 rounded-md shadow-md bg-white no-print">
         <div className="flex h-24 rounded-sm px-4 py-4">
@@ -200,6 +195,8 @@ export default function Book({ accounts, groupedAccounts, initialDailyBook, init
 
 export const getServerSideProps: GetServerSideProps = withSecureAccess(async (context) => {
 
+  const tabs = await getNavTabs(context);
+  const [, company] = await getUserInfo(context);
   const accounts = await getAccounts();
   const groupedAccounts = groupAccounts(accounts);
 
@@ -210,6 +207,8 @@ export const getServerSideProps: GetServerSideProps = withSecureAccess(async (co
 
   return {
     props: {
+      tabs,
+      company,
       masterBook,
       accounts,
       groupedAccounts,

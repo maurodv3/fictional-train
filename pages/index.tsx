@@ -3,13 +3,7 @@ import Navbar, { TabInfo } from '../components/Navbar';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import withSecureAccess from '../lib/secured';
-
-const tabs : TabInfo[] = [
-  { name: 'tab_actions', href: '/', active: true },
-  { name: 'tab_entries', href: '/book_entry', active: false },
-  { name: 'tab_books', href: '/book', active: false },
-  { name: 'tab_accounts', href: '/account', active: false }
-];
+import { getNavTabs } from '../handlers/user/userService';
 
 interface Card {
   href: string;
@@ -18,8 +12,13 @@ interface Card {
   icon: object;
 }
 
-const cards : Card[] = [
-  {
+const availableCards : {
+  book_entry: Card;
+  book: Card;
+  logout: Card;
+  account: Card;
+} = {
+  book_entry: {
     href: '/book_entry',
     title_key: 'main_action_add_entry',
     description_key: 'main_action_add_entry_desc',
@@ -30,7 +29,7 @@ const cards : Card[] = [
       </svg>
     )
   },
-  {
+  book: {
     href: '/book',
     title_key: 'main_action_view_books',
     description_key: 'main_action_view_books_desc',
@@ -41,18 +40,7 @@ const cards : Card[] = [
       </svg>
     )
   },
-  {
-    href: '/account',
-    title_key: 'main_action_manage_accounts',
-    description_key: 'main_action_manage_accounts_desc',
-    icon: (
-      <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    )
-  },
-  {
+  logout: {
     href: '/logout',
     title_key: 'main_action_close_session',
     description_key: 'main_action_close_session_desc',
@@ -63,9 +51,27 @@ const cards : Card[] = [
       </svg>
     )
   },
-];
+  account: {
+    href: '/account',
+    title_key: 'main_action_manage_accounts',
+    description_key: 'main_action_manage_accounts_desc',
+    icon: (
+      <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    )
+  }
+};
 
-export default function Home() {
+export default function Home({ tabs }) {
+
+  let cards: Card[];
+  if (tabs.filter(tabs => tabs.name === 'tab_accounts').length !== 0) {
+    cards = [availableCards.book_entry, availableCards.book, availableCards.account, availableCards.logout];
+  } else {
+    cards = [availableCards.book_entry, availableCards.book, availableCards.logout];
+  }
 
   const [t] = useTranslation();
 
@@ -116,8 +122,13 @@ export default function Home() {
   );
 }
 
-export const getServerSideProps = withSecureAccess(async ({ req, res }) => {
+export const getServerSideProps = withSecureAccess(async (context) => {
+
+  const tabs = await getNavTabs(context);
+
   return {
-    props: { },
+    props: {
+      tabs
+    },
   };
 }, null);

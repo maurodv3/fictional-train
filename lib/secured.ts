@@ -10,7 +10,7 @@ export default function withSecureAccess(handler, clearance) {
       res.setHeader('location', '/login');
       res.statusCode = 302;
       res.end();
-      return { props: {} };
+      return new Promise<any>(() => {});
     }
 
     if (clearance) {
@@ -24,7 +24,7 @@ export default function withSecureAccess(handler, clearance) {
     res.setHeader('location', '/404');
     res.statusCode = 302;
     res.end();
-    return { props: {} };
+    return new Promise<any>(() => {});
 
   });
 }

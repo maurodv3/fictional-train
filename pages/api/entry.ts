@@ -4,6 +4,45 @@ import { getOperationType, result } from '../../handlers/util/economy';
 
 export default withSession(async (request, response) => {
 
+  const { session } = request;
+
+  const loggedUser = session.get('user');
+  const expandedUser = await prisma.users.findOne({
+    where: {
+      user_id: loggedUser.id
+    }
+  });
+
+  const now = new Date();
+  const periods = await prisma.financial_period.findMany({
+    where: {
+      AND: [
+        {
+          financial_entity_id: {
+            equals: expandedUser.financial_entity_id
+          }
+        },
+        {
+          period_start_date: {
+            lte: now
+          }
+        },
+        {
+          period_end_date: {
+            gte: now
+          }
+        }
+      ]
+    }
+  });
+
+  if (periods.length === 0) {
+    // Start new period.
+    throw new Error('Not supported yet.');
+  }
+
+  const currentPeriod = periods[0];
+
   const { description, entries } : {
     description: string;
     entries : {
@@ -67,6 +106,11 @@ export default withSession(async (request, response) => {
       entry_seat_lines: {
         create: [...lines]
       },
+      financial_period: {
+        connect: {
+          financial_period_id: currentPeriod.financial_period_id
+        }
+      }
     }
   });
 

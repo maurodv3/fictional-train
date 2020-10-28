@@ -14,15 +14,9 @@ import FormSection from '../components/FormSection';
 import FormErrorMessage from '../components/FormErrorMessage';
 import FormSuccessMessage from '../components/FormSuccessMessage';
 import { getGroupedAccounts } from '../handlers/account/accountService';
+import { getNavTabs } from '../handlers/user/userService';
 
-const tabs : TabInfo[] = [
-  { name: 'tab_actions', href: '/', active: false },
-  { name: 'tab_entries', href: '/book_entry', active: true },
-  { name: 'tab_books', href: '/book', active: false },
-  { name: 'tab_accounts', href: '/account', active: false }
-];
-
-export default function BookEntry({ accounts }) {
+export default function BookEntry({ tabs, accounts }) {
 
   const [t] = useTranslation();
   const numberFormatter = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'ARS' });
@@ -40,6 +34,8 @@ export default function BookEntry({ accounts }) {
 
   const headers = [t('account'), t('debit'), t('assets')];
   const selectedFields = ['displayName', 'debit', 'assets'];
+
+  const showAddAccount = tabs.filter(tabs => tabs.name === 'tab_accounts').length !== 0;
 
   const selectAccount = (account) => {
     setSelectedAccount(account);
@@ -154,7 +150,7 @@ export default function BookEntry({ accounts }) {
             <FormSection label={t('account_and_amount')} fixedHeight={'full'}>
               <div className="flex justify-evenly pb-3 border-b-2 border-gray-100">
                 <div className="text-center">
-                  <AccountSelect selected={selectedAccount} accounts={accounts} onClick={selectAccount} />
+                  <AccountSelect selected={selectedAccount} accounts={accounts} onClick={selectAccount} showAddAccount={showAddAccount} />
                 </div>
                 <div className="text-center">
                   <FormMoneyInput value={amount} onChange={amountChange}/>
@@ -217,6 +213,7 @@ export default function BookEntry({ accounts }) {
 }
 
 export const getServerSideProps: GetServerSideProps = withSecureAccess(async (context) => {
+  const tabs = await getNavTabs(context);
   const groupedAccounts = await getGroupedAccounts(
     {
       AND: [
@@ -232,6 +229,9 @@ export const getServerSideProps: GetServerSideProps = withSecureAccess(async (co
       account_balance: 'desc'
     });
   return {
-    props: { accounts: groupedAccounts },
+    props: {
+      tabs,
+      accounts: groupedAccounts
+    },
   };
 }, null);

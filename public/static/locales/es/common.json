@@ -55,6 +55,7 @@
 
   "account.list": "Cuentas",
   "account.list.theader.number": "Nº",
+  "account.list.theader.type": "Tipo",
   "account.list.theader.name": "Nombre",
   "account.list.theader.balance": "Saldo actual",
   "account.list.theader.abstract": "Recibe Saldo",
@@ -100,6 +101,14 @@
 
   "book.print.company.name": "Empresa: {{company}}.",
   "book.print.from.to": "Desde: {{from}} Hasta: {{to}}.",
-  "book.print.selected.book": "Libro: {{selectedBook}}."
+  "book.print.selected.book": "Libro: {{selectedBook}}.",
+  "book.print.period": "Ejercicio: {{period}}.",
+
+  "about.info": "Información",
+  "about.identifier": "CUIT",
+  "about.legal.name": "Razon Social",
+  "about.address": "Dirección",
+  "about.email": "E-mail",
+  "about.liables": "Responsables"
 
 }

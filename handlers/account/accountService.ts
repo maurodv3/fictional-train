@@ -2,7 +2,7 @@ import prisma from '../../prisma/prisma';
 import Account from './Account';
 
 export async function createAccount(account: Account) {
-  await prisma.accounts.create({
+  const created = await prisma.accounts.create({
     data : {
       name: account.name,
       abstract_account: account.abstract_account,
@@ -20,6 +20,7 @@ export async function createAccount(account: Account) {
       }
     }
   });
+  await prisma.$executeRaw(`UPDATE accounts SET account_id = ${account.parent_account_id}${created.account_id} WHERE account_id = ${created.account_id}`);
 }
 
 export async function updateAccountStatus(accountId: number, accountStatus: boolean) {
