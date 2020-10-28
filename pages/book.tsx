@@ -14,7 +14,7 @@ import Table from '../components/Table';
 import Account from '../handlers/account/Account';
 import fetch from 'isomorphic-unfetch';
 import MasterBookTable from '../components/MasterBookTable';
-import {getNavTabs, getUserInfo} from '../handlers/user/userService';
+import { getNavTabs, getUserInfo } from '../handlers/user/userService';
 
 export default function Book({ tabs, accounts, groupedAccounts, initialDailyBook, initialMasterBook, from, to, company }) {
 

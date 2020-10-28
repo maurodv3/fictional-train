@@ -1,6 +1,6 @@
 import withSession from '../../../lib/session';
 import { NextApiRequest, NextApiResponse } from 'next';
-import {getDailyBook, getMasterBook} from '../../../handlers/book/bookService';
+import { getDailyBook, getMasterBook } from '../../../handlers/book/bookService';
 import { endOfDay, startOfDay } from 'date-fns';
 
 export default withSession(async (request: NextApiRequest, response: NextApiResponse) => {
