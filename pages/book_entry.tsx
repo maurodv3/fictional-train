@@ -161,7 +161,7 @@ export default function BookEntry({ tabs, accounts }) {
                 </div>
                 <div className="text-center mt-2">
                   <button className={`rounded shadow border border-gray-100 focus:outline-none focus:shadow-outline ${isAddEntryEnabled() ? '' : 'opacity-50 cursor-not-allowed'}`}
-                          onClick={addEntry} disabled={!isAddEntryEnabled()} type={'button'}>
+                          onClick={addEntry} disabled={!isAddEntryEnabled()} type={'button'} title={t('add_line')}>
                     <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg"
                          viewBox="0 0 20 20" fill="green" fillOpacity="0.5" strokeOpacity="0.8">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} fillRule="evenodd" clipRule="evenodd"

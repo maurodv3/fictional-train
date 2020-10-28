@@ -42,6 +42,7 @@
   "total_assets": "Haber total",
   "total_debit": "Debe total",
   "total_diff": "Diferencia",
+  "add_line": "Agregar nueva linea",
   "add_entry": "Agregar Asiento",
   "entry.success": "El asiento se agrego correctamente.",
   "entry.error": "No se pudo agregar el asiento.",
