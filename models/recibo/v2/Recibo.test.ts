@@ -19,34 +19,34 @@ describe('asd', () => {
     cuentaBanco.tipo = 'Caja de ahorro';
     cuentaBanco.numero = '123456';
 
-    const mauro: Empleado = new Empleado();
-    mauro.legajo = '0380';
-    mauro.nombre = 'Mauro';
-    mauro.apellido = 'Vidal';
-    mauro.cuil = '20-35505180-4';
-    mauro.dni = '35505180';
-    mauro.fechaIngreso = new Date(2018, 1, 1);
-    mauro.puesto = desarrollador;
-    mauro.cuentaBanco = cuentaBanco;
+    const santiago: Empleado = new Empleado();
+    santiago.legajo = '0380';
+    santiago.nombre = 'Santiago';
+    santiago.apellido = 'Pidal';
+    santiago.cuil = '20-123504171-4';
+    santiago.dni = '123504171';
+    santiago.fechaIngreso = new Date(2018, 1, 1);
+    santiago.puesto = desarrollador;
+    santiago.cuentaBanco = cuentaBanco;
 
     const esposa = new Familiar();
     esposa.nombre = 'Esposa';
-    esposa.apellido = 'Vidal';
+    esposa.apellido = 'Pidal';
     esposa.fechaNacimiento = new Date(1995, 1, 1);
     esposa.cuil = '24-1234567-09';
     esposa.tipo = TipoFamiliar.CONJUGE;
 
     const hijo = new Familiar();
     hijo.nombre = 'Hijo';
-    hijo.apellido = 'Vidal';
+    hijo.apellido = 'Pidal';
     hijo.fechaNacimiento = new Date(2018, 1, 1);
     hijo.cuil = '20-1234567-04';
     hijo.tipo = TipoFamiliar.HIJO;
 
-    mauro.familiares = [esposa, hijo];
+    santiago.familiares = [esposa, hijo];
 
     const recibo: Recibo = new Recibo();
-    recibo.empleado = mauro;
+    recibo.empleado = santiago;
     recibo.horasExtras50 = 0;
     recibo.horasExtras100 = 1;
 
@@ -78,19 +78,19 @@ describe('asd', () => {
     cuentaBanco.tipo = 'Caja de ahorro';
     cuentaBanco.numero = '123456';
 
-    const mauro: Empleado = new Empleado();
-    mauro.legajo = '0380';
-    mauro.nombre = 'Mauro';
-    mauro.apellido = 'Vidal';
-    mauro.cuil = '20-35505180-4';
-    mauro.dni = '35505180';
-    mauro.fechaIngreso = new Date(2018, 1, 1);
-    mauro.puesto = desarrollador;
-    mauro.cuentaBanco = cuentaBanco;
+    const santiago: Empleado = new Empleado();
+    santiago.legajo = '0380';
+    santiago.nombre = 'Santiago';
+    santiago.apellido = 'Pidal';
+    santiago.cuil = '20-123504171-4';
+    santiago.dni = '123504171';
+    santiago.fechaIngreso = new Date(2018, 1, 1);
+    santiago.puesto = desarrollador;
+    santiago.cuentaBanco = cuentaBanco;
 
     const esposa = new Familiar();
     esposa.nombre = 'Esposa';
-    esposa.apellido = 'Vidal';
+    esposa.apellido = 'Pidal';
     esposa.fechaNacimiento = new Date(1995, 1, 1);
     esposa.cuil = '24-1234567-09';
     esposa.tipo = TipoFamiliar.CONJUGE;
@@ -98,15 +98,15 @@ describe('asd', () => {
 
     const hijo = new Familiar();
     hijo.nombre = 'Hijo';
-    hijo.apellido = 'Vidal';
+    hijo.apellido = 'Pidal';
     hijo.fechaNacimiento = new Date(2018, 1, 1);
     hijo.cuil = '20-1234567-04';
     hijo.tipo = TipoFamiliar.HIJO;
 
-    mauro.familiares = [esposa, hijo];
+    santiago.familiares = [esposa, hijo];
 
     const recibo: Recibo = new Recibo();
-    recibo.empleado = mauro;
+    recibo.empleado = santiago;
     recibo.horasExtras50 = 0;
     recibo.horasExtras100 = 1;
     recibo.conceptos = conceptos.map(toModel);

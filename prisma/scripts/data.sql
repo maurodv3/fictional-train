@@ -101,7 +101,7 @@ INSERT INTO job_category VALUES (5, 'Administrativo I', 0, 0, 4);
 INSERT INTO job_category VALUES (6, 'Administrativo II', 10, 0, 4);
 INSERT INTO job_category VALUES (7, 'Administrativo III', 15, 10000, 4);
 
-INSERT INTO employee VALUES (1, '20-35505180-4', 'mauro@work.com', 'mauro@personal.com', 'Sarmiento 842, Junin, Buenos Aires', 7, '2020-01-01 08:00:00 -3:00');
+INSERT INTO employee VALUES (1, '20-123504171-4', 'santiago@work.com', 'santiago@personal.com', 'Av. San Martin 123, Junin, Buenos Aires', 7, '2020-01-01 08:00:00 -3:00');
 
 INSERT INTO concepto VALUES (1, 1, 'Sueldo Basico', 1 /*DIA*/, 0/*Hab_c_desc*/, 0/*FIJO*/, 'G1', 'SG11', '{}', '$.na', '$.basico', '1', '1', null);
 INSERT INTO concepto VALUES (2, 2, 'Antiguedad', 2 /*%*/, 0/*Hab_c_desc*/, 1/*%*/, 'G1', 'SG12', '{SG11}', '$.antiguedad', null, '1', '1', '$.antiguedad > 0');
