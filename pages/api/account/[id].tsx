@@ -1,6 +1,6 @@
-import withSession from '../../../lib/session';
+import withSession from '@middlewares/session';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getAccounts, groupAccounts, updateAccountStatus } from '../../../handlers/account/accountService';
+import AccountService from '@services/AccountService';
 
 export default withSession(async (request: NextApiRequest, response: NextApiResponse) => {
 
@@ -17,14 +17,14 @@ export default withSession(async (request: NextApiRequest, response: NextApiResp
     status: boolean
   } = request.body;
 
-  await updateAccountStatus(Number(id), payload.status);
+  await AccountService.updateAccountStatus(Number(id), payload.status);
 
-  const accounts = await getAccounts(undefined, { name: 'asc' });
+  const accounts = await AccountService.getAccounts(undefined, { name: 'asc' });
   return response
     .status(200)
     .json({
       accounts,
-      grouped: groupAccounts(accounts)
+      grouped: AccountService.groupAccounts(accounts)
     });
 
 });

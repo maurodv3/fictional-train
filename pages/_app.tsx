@@ -1,7 +1,7 @@
 import '../styles/index.css';
 import { SWRConfig } from 'swr';
 import { AppProps } from 'next/app';
-import fetch from '../lib/fetch-json';
+import fetch from '../utils/fetch-json';
 import '../i18n';
 import 'react-datepicker/dist/react-datepicker.css';
 

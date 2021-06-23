@@ -1,4 +1,4 @@
-import AccountType from './AccountType';
+import AccountType from '@model/AccountType';
 
 export default interface Account {
   account_id: number;

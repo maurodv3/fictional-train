@@ -1,9 +1,9 @@
 import React from 'react';
-import Navbar, { TabInfo } from '../components/Navbar';
+import Navbar from '@components/Navbar';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
-import withSecureAccess from '../lib/secured';
-import { getNavTabs } from '../handlers/user/userService';
+import withSecureAccess from '@middlewares/secured';
+import UserService from '@services/UserService';
 
 interface Card {
   href: string;
@@ -17,6 +17,7 @@ const availableCards : {
   book: Card;
   logout: Card;
   account: Card;
+  employee: Card;
 } = {
   book_entry: {
     href: '/book_entry',
@@ -61,18 +62,35 @@ const availableCards : {
               d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
     )
+  },
+  employee: {
+    href: '/employee',
+    title_key: 'Empleados',
+    description_key: 'Visualizar y Administrar datos de empleados.',
+    icon: (
+      <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+      </svg>
+    )
   }
 };
 
+function calculateCards(tabs) : Card[] {
+  const cards: Card[] = [availableCards.book_entry, availableCards.book];
+  if (tabs.filter(tabs => tabs.name === 'tab_accounts').length !== 0) {
+    cards.push(availableCards.account);
+  }
+  if (tabs.filter(tabs => tabs.name === 'tab_employee').length !== 0) {
+    cards.push(availableCards.employee);
+  }
+  cards.push(availableCards.logout);
+  return cards;
+}
+
 export default function Home({ tabs }) {
 
-  let cards: Card[];
-  if (tabs.filter(tabs => tabs.name === 'tab_accounts').length !== 0) {
-    cards = [availableCards.book_entry, availableCards.book, availableCards.account, availableCards.logout];
-  } else {
-    cards = [availableCards.book_entry, availableCards.book, availableCards.logout];
-  }
-
+  const cards = calculateCards(tabs);
   const [t] = useTranslation();
 
   return (
@@ -124,7 +142,7 @@ export default function Home({ tabs }) {
 
 export const getServerSideProps = withSecureAccess(async (context) => {
 
-  const tabs = await getNavTabs(context);
+  const tabs = await UserService.getNavTabs(context);
 
   return {
     props: {

@@ -17,7 +17,34 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "types": ["jest", "node"]
+    "types": [
+      "jest",
+      "node"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@services/*": [
+        "services/*"
+      ],
+      "@hooks/*": [
+        "hooks/*"
+      ],
+      "@components/*": [
+        "components/*"
+      ],
+      "@middlewares/*": [
+        "middlewares/*"
+      ],
+      "@database/*": [
+        "prisma/*"
+      ],
+      "@model/*": [
+        "models/*"
+      ],
+      "@model-ui/*": [
+        "models/view/*"
+      ]
+    }
   },
   "include": [
     "next-env.d.ts",

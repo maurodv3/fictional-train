@@ -17,6 +17,8 @@
   "tab_entries": "Asientos",
   "tab_books": "Libros",
   "tab_accounts": "Cuentas",
+  "tab_employee": "Empleados",
+  "tab_jobs": "Puestos",
 
   "main_subtitle": "Acciones y actividades",
   "main_introduction": "Bienvenido, para empezar elige una actividad o acción a realizar en el sistema.",
@@ -28,7 +30,7 @@
   "main_action_close_session_desc": " Cerrar sesión del sistema.",
 
   "main_action_manage_accounts": "Administrar cuentas",
-  "main_action_manage_accounts_desc": "Administrar, cuentas contables existentes y agregar nuevas.",
+  "main_action_manage_accounts_desc": "Administrar cuentas contables existentes y agregar nuevas.",
 
   "book_entry_title": "Agregar Asiento",
   "details": "Detalles",

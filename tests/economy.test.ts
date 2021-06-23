@@ -1,4 +1,4 @@
-import { balance, result } from '../handlers/util/economy';
+import { balance, result } from '../utils/economy';
 
 describe('Economy Util', () => {
 

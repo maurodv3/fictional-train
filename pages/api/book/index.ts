@@ -1,6 +1,6 @@
-import withSession from '../../../lib/session';
+import withSession from '@middlewares/session';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getDailyBook, getMasterBook } from '../../../handlers/book/bookService';
+import BookService from '@services/BookService';
 import { endOfDay, startOfDay } from 'date-fns';
 
 export default withSession(async (request: NextApiRequest, response: NextApiResponse) => {
@@ -16,8 +16,8 @@ export default withSession(async (request: NextApiRequest, response: NextApiResp
   const fromDate = startOfDay(new Date(Date.parse(from)));
   const toDate = endOfDay(new Date(Date.parse(to)));
 
-  const dailyBook = await getDailyBook(fromDate, toDate);
-  const masterBook = await getMasterBook(fromDate, toDate);
+  const dailyBook = await BookService.getDailyBook(fromDate, toDate);
+  const masterBook = await BookService.getMasterBook(fromDate, toDate);
 
   return response.json({
     masterBook,

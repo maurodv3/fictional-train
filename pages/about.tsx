@@ -1,8 +1,8 @@
 import { GetServerSideProps } from 'next';
-import withSecureAccess from '../lib/secured';
-import Navbar from '../components/Navbar';
+import withSecureAccess from '@middlewares/secured';
+import Navbar from '@components/Navbar';
 import { useTranslation } from 'react-i18next';
-import { getNavTabs, getUserInfo } from '../handlers/user/userService';
+import UserService from '@services/UserService';
 
 export default function About({ entity, tabs }) {
 
@@ -61,8 +61,8 @@ export default function About({ entity, tabs }) {
 }
 
 export const getServerSideProps: GetServerSideProps = withSecureAccess(async (context) => {
-  const [, entity] = await getUserInfo(context);
-  const tabs = await getNavTabs(context);
+  const [, entity] = await UserService.getUserInfo(context);
+  const tabs = await UserService.getNavTabs(context);
   return {
     props: {
       entity,

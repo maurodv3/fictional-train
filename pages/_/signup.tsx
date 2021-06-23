@@ -1,6 +1,6 @@
-import { Formik, Form, FormikHelpers } from 'formik';
-import FormInput from '../../components/FormInput';
-import FormSubmit from '../../components/FormSubmit';
+import { Form, Formik, FormikHelpers } from 'formik';
+import FormInput from '@components/FormInput';
+import FormSubmit from '@components/FormSubmit';
 
 interface Values {
   firstName: string;
@@ -51,7 +51,7 @@ export default function Signup() {
         </Form>
       </Formik>
       <p className="text-center text-gray-500 text-xs">
-        &copy;2020 Mauro Vidal
+        &copy;2021 Mauro Vidal
       </p>
     </div>
   );

@@ -1,29 +1,23 @@
 import { GetServerSideProps } from 'next';
-import withSecureAccess from '../lib/secured';
-import Navbar, { TabInfo } from '../components/Navbar';
-import FormSection from '../components/FormSection';
-import { Field, Form, Formik } from 'formik';
-import FormSubmit from '../components/FormSubmit';
+import withSecureAccess from '@middlewares/secured';
+import Navbar from '@components/Navbar';
+import FormSection from '@components/FormSection';
+import { Form, Formik } from 'formik';
+import FormSubmit from '@components/FormSubmit';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import ToggleButton from '../components/ToggleButton';
-import Table from '../components/Table';
-import AccountSelect from '../components/AccountSelect';
-import Account from '../handlers/account/Account';
+import ToggleButton from '@components/ToggleButton';
+import Table from '@components/Table';
+import AccountSelect from '@components/AccountSelect';
+import Account from '@model/Account';
 import fetch from 'isomorphic-unfetch';
-import { getAccounts, groupAccounts } from '../handlers/account/accountService';
-import FormSuccessMessage from '../components/FormSuccessMessage';
-
-const tabs : TabInfo[] = [
-  { name: 'tab_actions', href: '/', active: false },
-  { name: 'tab_entries', href: '/book_entry', active: false },
-  { name: 'tab_books', href: '/book', active: false },
-  { name: 'tab_accounts', href: '/account', active: true }
-];
+import AccountService from '@services/AccountService';
+import FormSuccessMessage from '@components/FormSuccessMessage';
+import UserService from '@services/UserService';
 
 const selectedFields : string[] = ['account_id', 'name', 'type', 'account_balance', 'abstract_account', 'switch'];
 
-export default function Accounts({ initialAccounts, initialGroupedAccounts }) {
+export default function Accounts({ tabs, initialAccounts, initialGroupedAccounts }) {
 
   const numberFormatter = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'ARS' });
 
@@ -197,10 +191,12 @@ export default function Accounts({ initialAccounts, initialGroupedAccounts }) {
 }
 
 export const getServerSideProps: GetServerSideProps = withSecureAccess(async (context) => {
-  const accounts = await getAccounts(undefined, { account_id: 'asc' });
-  const groupedAccounts = groupAccounts(accounts);
+  const tabs = await UserService.getNavTabs(context);
+  const accounts = await AccountService.getAccounts(undefined, { account_id: 'asc' });
+  const groupedAccounts = AccountService.groupAccounts(accounts);
   return {
     props: {
+      tabs,
       initialAccounts: accounts,
       initialGroupedAccounts: groupedAccounts
     },

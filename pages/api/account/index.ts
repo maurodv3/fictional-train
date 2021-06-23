@@ -1,6 +1,6 @@
-import withSession from '../../../lib/session';
+import withSession from '@middlewares/session';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { createAccount, getAccounts, groupAccounts } from '../../../handlers/account/accountService';
+import AccountService from '@services/AccountService';
 
 const POST = async (request: NextApiRequest, response: NextApiResponse) => {
 
@@ -15,7 +15,7 @@ const POST = async (request: NextApiRequest, response: NextApiResponse) => {
   } = request.body;
 
   if (payload.selectedAccount) {
-    await createAccount({
+    await AccountService.createAccount({
       name: payload.accountName,
       abstract_account: payload.abstractAccount,
       parent_account_id: payload.selectedAccount.account_id,
@@ -26,12 +26,12 @@ const POST = async (request: NextApiRequest, response: NextApiResponse) => {
       account_types: undefined,
     });
 
-    const accounts = await getAccounts(undefined, { account_id: 'asc' });
+    const accounts = await AccountService.getAccounts(undefined, { account_id: 'asc' });
     return response
       .status(201)
       .json({
         accounts,
-        grouped: groupAccounts(accounts)
+        grouped: AccountService.groupAccounts(accounts)
       });
 
   }
@@ -41,7 +41,7 @@ const POST = async (request: NextApiRequest, response: NextApiResponse) => {
 };
 
 const GET = async (request: NextApiRequest, response: NextApiResponse) => {
-  return response.status(201).json(await getAccounts(undefined, { name: 'asc' }));
+  return response.status(201).json(await AccountService.getAccounts(undefined, { name: 'asc' }));
 };
 
 const method = {

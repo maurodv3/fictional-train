@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import withSession from '../lib/session';
+import withSession from '@middlewares/session';
 import { useTranslation } from 'react-i18next';
 
 export default function Logout() {

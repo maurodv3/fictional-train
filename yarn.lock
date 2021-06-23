@@ -1506,12 +1506,22 @@
   resolved "https://registry.yarnpkg.com/@prisma/cli/-/cli-2.9.0.tgz#c6f6652890783b899f266537e90e69c3481f5474"
   integrity sha512-wPk4ehyTtVM7ZarWs16MhOc6kwLV/gZFardMvUeh46rlBwrklMdKtNChzzPa3wurrUPQ5KTbuRBz5Mgf7AdD/w==
 
-"@prisma/client@^2.6.2":
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/@prisma/client/-/client-2.6.2.tgz#842c8640a0cd5b7542522ac0645f7c8c9bd87254"
-  integrity sha512-SYbW6+Lcd/OcY6p9vjI845ERl77Z+rOcB0zh6RKQdxr8R6yZHc7aDUnjcp8fZr245HnLLRnCpfkAfqQ3lvLP8g==
+"@prisma/client@^2.16.1":
+  version "2.16.1"
+  resolved "https://registry.yarnpkg.com/@prisma/client/-/client-2.16.1.tgz#3aed1506f4090734735d1036bfdaee997032e793"
+  integrity sha512-g4zXwC9PRtlrad/CBu+lXHRhvkEz4QW9tDn7bJGwCVNeLi+gLzSbEHjo3xLZgI3+Jp+40flOzrJrYP0bkNCpdQ==
   dependencies:
-    pkg-up "^3.1.0"
+    "@prisma/engines-version" "2.16.1-1.8b74ad57aaf2cc6c155f382a18a8e3ba95aceb03"
+
+"@prisma/engines-version@2.16.1-1.8b74ad57aaf2cc6c155f382a18a8e3ba95aceb03":
+  version "2.16.1-1.8b74ad57aaf2cc6c155f382a18a8e3ba95aceb03"
+  resolved "https://registry.yarnpkg.com/@prisma/engines-version/-/engines-version-2.16.1-1.8b74ad57aaf2cc6c155f382a18a8e3ba95aceb03.tgz#52c026a05f6c109dd642c1edcc60ca45b01021ca"
+  integrity sha512-BkqxSWOc9aNYXjtmRtaLy2fKIeJ3+NKimRL1gKWXMjtxhKS5E3wvyxwZamtfIpEaZELGAO3x5+gqwoR9kS2oZA==
+
+"@prisma/engines@2.16.1-1.8b74ad57aaf2cc6c155f382a18a8e3ba95aceb03":
+  version "2.16.1-1.8b74ad57aaf2cc6c155f382a18a8e3ba95aceb03"
+  resolved "https://registry.yarnpkg.com/@prisma/engines/-/engines-2.16.1-1.8b74ad57aaf2cc6c155f382a18a8e3ba95aceb03.tgz#38f64337f6ad2ab9e13e7e2bac54286a79d2edfa"
+  integrity sha512-GZ1huP5KC6TPf9u8pYGFklUkGVTKFel6k4wL4iMr8AQ6MeSV4GDJX3lEtEJLb0ayj6je/hDEyQG9iMp/BysFYg==
 
 "@react-dnd/asap@^4.0.0":
   version "4.0.0"
@@ -6462,13 +6472,6 @@ pkg-dir@^4.1.0, pkg-dir@^4.2.0:
   dependencies:
     find-up "^4.0.0"
 
-pkg-up@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/pkg-up/-/pkg-up-3.1.0.tgz#100ec235cc150e4fd42519412596a28512a0def5"
-  integrity sha512-nDywThFk1i4BQK4twPQ6TA4RT8bDY96yeuCVBWL3ePARCiEKDRSrNGbFIgUJpLp+XeIR65v8ra7WuJOFUBtkMA==
-  dependencies:
-    find-up "^3.0.0"
-
 platform@1.3.3:
   version "1.3.3"
   resolved "https://registry.yarnpkg.com/platform/-/platform-1.3.3.tgz#646c77011899870b6a0903e75e997e8e51da7461"
@@ -6948,6 +6951,13 @@ pretty-hrtime@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/pretty-hrtime/-/pretty-hrtime-1.0.3.tgz#b7e3ea42435a4c9b2759d99e0f201eb195802ee1"
   integrity sha1-t+PqQkNaTJsnWdmeDyAesZWALuE=
+
+prisma@^2.16.1:
+  version "2.16.1"
+  resolved "https://registry.yarnpkg.com/prisma/-/prisma-2.16.1.tgz#cf73322e5426aabcd084a42dac89866006f5823f"
+  integrity sha512-TniTihl4xwWY7Hy+1UUpZ6jxHyriRDUW4i7TChZNBZM88IG8kvR5cSX+/JY/lzWGMUR4ZDBzoIuNcdPx/7eWag==
+  dependencies:
+    "@prisma/engines" "2.16.1-1.8b74ad57aaf2cc6c155f382a18a8e3ba95aceb03"
 
 process-nextick-args@~2.0.0:
   version "2.0.1"

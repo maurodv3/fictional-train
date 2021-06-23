@@ -1,13 +1,13 @@
-import withSession from '../../lib/session';
+import withSession from '../../middlewares/session';
 import prisma from '../../prisma/prisma';
-import { getOperationType, result } from '../../handlers/util/economy';
+import { getOperationType, result } from '../../utils/economy';
 
 export default withSession(async (request, response) => {
 
   const { session } = request;
 
   const loggedUser = session.get('user');
-  const expandedUser = await prisma.users.findOne({
+  const expandedUser = await prisma.users.findUnique({
     where: {
       user_id: loggedUser.id
     }

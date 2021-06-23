@@ -1,11 +1,11 @@
-import withSession from '../../lib/session';
+import withSession from '../../middlewares/session';
 import prisma  from '../../prisma/prisma';
 
 export default withSession(async (request, response) => {
 
   const { username, password } : { username: string, password: string } = await request.body;
 
-  const user = await prisma.users.findOne({
+  const user = await prisma.users.findUnique({
     where: { username },
     include: {
       roles: {

@@ -1,11 +1,10 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["transactionApi"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgres://postgres:admin@localhost:5432/sadm2"
 }
 
 model users {
@@ -117,4 +116,69 @@ model financial_period {
   period_end_date     DateTime
   financial_entities  financial_entities @relation(fields: [financial_entity_id], references: [entity_id])
   entry_seats         entry_seats[]
+}
+
+model department {
+  department_id Int    @id @default(autoincrement())
+  name          String
+  job           job[]
+}
+
+model employee {
+  employee_id                         Int          @id @default(autoincrement())
+  identity_number                     String
+  email_work                          String
+  email_personal                      String
+  address                             String
+  job_category                        Int
+  start_date                          DateTime
+  job_category_employeeTojob_category job_category @relation(fields: [job_category], references: [job_category_id])
+}
+
+model job {
+  job_id        Int            @id @default(autoincrement())
+  name          String
+  base_salary   Float
+  department_id Int
+  department    department     @relation(fields: [department_id], references: [department_id])
+  job_category  job_category[]
+}
+
+model job_category {
+  job_category_id  Int        @id @default(autoincrement())
+  name             String
+  percentage_raise Float
+  fixed_raise      Float
+  job_id           Int
+  job              job        @relation(fields: [job_id], references: [job_id])
+  employee         employee[]
+}
+
+model concepto {
+  concepto_id    Int              @id @default(autoincrement())
+  codigo         Int              @unique
+  nombre         String           @unique
+  unidad         Int
+  columna        Int
+  tipoconcepto   Int
+  grupo          String
+  subgrupo       String
+  seaplicaa      String[]
+  cantidad       String
+  valor          String?
+  multiplicador  String           @default("1")
+  divisor        String           @default("1")
+  condicion      String?
+  periodico      Boolean?         @default(true)
+  concepto_tabla concepto_tabla[]
+}
+
+model concepto_tabla {
+  concepto_tabla_id Int       @id @default(autoincrement())
+  concepto_id       Int?
+  minimo            Float
+  maximo            Float
+  fijo              Float
+  porcentual        Float
+  concepto          concepto? @relation(fields: [concepto_id], references: [concepto_id])
 }

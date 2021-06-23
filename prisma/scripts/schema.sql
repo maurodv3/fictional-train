@@ -108,3 +108,68 @@ CREATE TABLE entry_seat_lines (
     CONSTRAINT fk_account_id FOREIGN KEY (account_id) REFERENCES accounts(account_id),
     CONSTRAINT unique_position UNIQUE(entry_seat_id, position)
 );
+
+CREATE TABLE department (
+    department_id SERIAL,
+    name VARCHAR(255) NOT NULL,
+    PRIMARY KEY(department_id)
+);
+
+CREATE TABLE job (
+     job_id SERIAL,
+     name VARCHAR(255) NOT NULL,
+     base_salary NUMERIC(18,4) NOT NULL,
+     department_id INT NOT NULL,
+     PRIMARY KEY(job_id),
+     CONSTRAINT fk_department_id FOREIGN KEY (department_id) REFERENCES department(department_id)
+);
+
+CREATE TABLE job_category (
+      job_category_id SERIAL,
+      name VARCHAR(255) NOT NULL,
+      percentage_raise NUMERIC(18, 4) NOT NULL,
+      fixed_raise NUMERIC(18, 4) NOT NULL,
+      job_id INT NOT NULL,
+      PRIMARY KEY(job_category_id),
+      CONSTRAINT fk_job_id FOREIGN KEY (job_id) REFERENCES job(job_id)
+);
+
+CREATE TABLE employee (
+    employee_id SERIAL,
+    identity_number VARCHAR(30) NOT NULL,
+    email_work VARCHAR(255) NOT NULL,
+    email_personal VARCHAR(255) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    job_category_id INT NOT NULL,
+    start_date TIMESTAMPTZ NOT NULL,
+    PRIMARY KEY(employee_id),
+    CONSTRAINT fk_job_category FOREIGN KEY (job_category_id) REFERENCES job_category(job_category_id)
+);
+
+CREATE TABLE concepto (
+    concepto_id SERIAL PRIMARY KEY,
+    codigo INT UNIQUE NOT NULL,
+    nombre VARCHAR(100) UNIQUE NOT NULL,
+    unidad INT NOT NULL, -- HORA, DIA, MES, AÑO, %
+    columna INT NOT NULL, -- HAB_C_DESC, HAB_S_DESC, DESC
+    tipoConcepto INT NOT NULL, -- FIJO, CALCULADO, TABLA, %
+    grupo VARCHAR(100) NOT NULL,
+    subGrupo VARCHAR(100) NOT NULL,
+    seAplicaA VARCHAR(100)[] NOT NULL,
+    cantidad VARCHAR(255) NOT NULL,
+    valor VARCHAR(255),
+    multiplicador VARCHAR(255) NOT NULL DEFAULT '1',
+    divisor VARCHAR(255) NOT NULL DEFAULT '1',
+    condicion VARCHAR(255),
+    periodico BOOLEAN DEFAULT true
+);
+
+CREATE TABLE concepto_tabla (
+    concepto_tabla_id SERIAL PRIMARY KEY,
+    concepto_id INT,
+    minimo NUMERIC(18,4) NOT NULL,
+    maximo NUMERIC(18,4) NOT NULL,
+    fijo NUMERIC(18,4) NOT NULL,
+    porcentual NUMERIC(18,4) NOT NULL,
+    CONSTRAINT fk_concepto_id FOREIGN KEY (concepto_id) REFERENCES concepto(concepto_id)
+);

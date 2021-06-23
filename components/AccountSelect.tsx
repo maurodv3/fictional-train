@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Transition } from '@tailwindui/react';
-import Account from '../handlers/account/Account';
+import Account from '../models/Account';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 

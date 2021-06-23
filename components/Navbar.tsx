@@ -2,12 +2,7 @@ import { useState } from 'react';
 import { Transition } from '@tailwindui/react';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
-
-export interface TabInfo {
-  name: string;
-  href: string;
-  active: boolean;
-}
+import { TabInfo } from '@model-ui/interfaces';
 
 export default function Navbar({ children, tabs, withHeader, displayName } :
   {
@@ -61,7 +56,7 @@ export default function Navbar({ children, tabs, withHeader, displayName } :
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <img className="h-8 w-8" src="https://tailwindui.com/img/logos/workflow-mark-on-dark.svg" alt="Workflow logo"/>
+                <img className="h-8 w-8" src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg" alt="Workflow logo"/>
               </div>
               <div className="hidden md:block">
                 <div className="ml-10 flex items-baseline space-x-4">

@@ -1,20 +1,20 @@
-import Navbar, { TabInfo } from '../components/Navbar';
+import Navbar from '@components/Navbar';
 import { useTranslation } from 'react-i18next';
 import { GetServerSideProps } from 'next';
-import withSecureAccess from '../lib/secured';
-import FormSubmit from '../components/FormSubmit';
+import withSecureAccess from '@middlewares/secured';
+import FormSubmit from '@components/FormSubmit';
 import { useEffect, useState } from 'react';
-import AccountSelect from '../components/AccountSelect';
-import ToggleButton from '../components/ToggleButton';
-import FormMoneyInput from '../components/FormMoneyInput';
-import TableV2 from '../components/TableV2';
+import AccountSelect from '@components/AccountSelect';
+import ToggleButton from '@components/ToggleButton';
+import FormMoneyInput from '@components/FormMoneyInput';
+import TableV2 from '@components/TableV2';
 import { Form, Formik } from 'formik';
 import fetch from 'isomorphic-unfetch';
-import FormSection from '../components/FormSection';
-import FormErrorMessage from '../components/FormErrorMessage';
-import FormSuccessMessage from '../components/FormSuccessMessage';
-import { getGroupedAccounts } from '../handlers/account/accountService';
-import { getNavTabs } from '../handlers/user/userService';
+import FormSection from '@components/FormSection';
+import FormErrorMessage from '@components/FormErrorMessage';
+import FormSuccessMessage from '@components/FormSuccessMessage';
+import AccountService from '@services/AccountService';
+import UserService from '@services/UserService';
 
 export default function BookEntry({ tabs, accounts }) {
 
@@ -213,8 +213,8 @@ export default function BookEntry({ tabs, accounts }) {
 }
 
 export const getServerSideProps: GetServerSideProps = withSecureAccess(async (context) => {
-  const tabs = await getNavTabs(context);
-  const groupedAccounts = await getGroupedAccounts(
+  const tabs = await UserService.getNavTabs(context);
+  const groupedAccounts = await AccountService.getGroupedAccounts(
     {
       AND: [
         {

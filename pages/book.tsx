@@ -1,20 +1,20 @@
 import { GetServerSideProps } from 'next';
-import withSecureAccess from '../lib/secured';
-import Navbar from '../components/Navbar';
+import withSecureAccess from '@middlewares/secured';
+import Navbar from '@components/Navbar';
 import { subMonths } from 'date-fns';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import es from 'date-fns/locale/es';
 import { useEffect, useState } from 'react';
-import { getDailyBook, getMasterBook } from '../handlers/book/bookService';
-import { getAccounts, groupAccounts } from '../handlers/account/accountService';
-import AccountSelect from '../components/AccountSelect';
-import DailyBookTable from '../components/DailyBookTable';
+import BookService from '@services/BookService';
+import AccountService from '@services/AccountService';
+import AccountSelect from '@components/AccountSelect';
+import DailyBookTable from '@components/DailyBookTable';
 import { useTranslation } from 'react-i18next';
-import Table from '../components/Table';
-import Account from '../handlers/account/Account';
+import Table from '@components/Table';
+import Account from '@model/Account';
 import fetch from 'isomorphic-unfetch';
-import MasterBookTable from '../components/MasterBookTable';
-import { getNavTabs, getUserInfo } from '../handlers/user/userService';
+import MasterBookTable from '@components/MasterBookTable';
+import UserService from '@services/UserService';
 
 export default function Book({ tabs, accounts, groupedAccounts, initialDailyBook, initialMasterBook, from, to, company }) {
 
@@ -195,15 +195,15 @@ export default function Book({ tabs, accounts, groupedAccounts, initialDailyBook
 
 export const getServerSideProps: GetServerSideProps = withSecureAccess(async (context) => {
 
-  const tabs = await getNavTabs(context);
-  const [, company] = await getUserInfo(context);
-  const accounts = await getAccounts();
-  const groupedAccounts = groupAccounts(accounts);
+  const tabs = await UserService.getNavTabs(context);
+  const [, company] = await UserService.getUserInfo(context);
+  const accounts = await AccountService.getAccounts();
+  const groupedAccounts = AccountService.groupAccounts(accounts);
 
   const defaultFrom = subMonths(new Date(), 1);
   const defaultTo = new Date();
-  const dailyBook = await getDailyBook(defaultFrom, defaultTo);
-  const masterBook = await getMasterBook(defaultFrom, defaultTo);
+  const dailyBook = await BookService.getDailyBook(defaultFrom, defaultTo);
+  const masterBook = await BookService.getMasterBook(defaultFrom, defaultTo);
 
   return {
     props: {
