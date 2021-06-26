@@ -3,7 +3,7 @@ jobs:
   lint:
     executor:
       name: node/default
-      tag: '14.10'
+      tag: '14.17'
     steps:
       - checkout
       - node/install-packages:
@@ -15,7 +15,7 @@ jobs:
   test:
     executor:
       name: node/default
-      tag: '14.10'
+      tag: '14.17'
     steps:
       - checkout
       - node/install-packages:
@@ -25,7 +25,7 @@ jobs:
           name: run tests
 
 orbs:
-  node: circleci/node@4.0.0
+  node: circleci/node@4.5.1
 
 version: 2.1
 
