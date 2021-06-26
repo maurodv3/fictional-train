@@ -8,15 +8,15 @@
 
 /* Write you own custom component styles here */
 .std-data-input {
-    @apply .shadow .appearance-none .border .rounded .text-gray-700 .leading-tight
+    @apply shadow appearance-none border rounded text-gray-700 leading-tight
 }
 
 .std-data-input:focus {
-    @apply .outline-none .shadow-outline
+    @apply outline-none shadow-outline
 }
 
 body {
-    @apply .bg-gray-100
+    @apply bg-gray-100
 }
 
 input::-webkit-outer-spin-button,
