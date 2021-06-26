@@ -1,8 +1,8 @@
-import {Empleado} from './Empleado';
-import {Deposito} from './Banco';
-import {Columna, Concepto} from './Concepto';
-import {ReciboParameterMapper} from './ReciboParameterMapper';
-import {ConceptoCalculado} from './ConceptoCalculado';
+import { Empleado } from './Empleado';
+import { Deposito } from './Banco';
+import { Columna, Concepto } from './Concepto';
+import { ReciboParameterMapper } from './ReciboParameterMapper';
+import { ConceptoCalculado } from './ConceptoCalculado';
 
 export class Recibo {
 
