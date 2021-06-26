@@ -8,7 +8,7 @@ import { toModel } from './ConceptoMapper';
 
 describe('asd', () => {
 
-  it('asd', async () => {
+  it.skip('asd', async () => {
 
     const desarrollador: Puesto = new Puesto();
     desarrollador.nombre = 'Desarollador de Software';
@@ -54,7 +54,7 @@ describe('asd', () => {
 
   });
 
-  it('qwe', async () => {
+  it.skip('qwe', async () => {
 
     const db = DatabaseConnection.getConnection();
     const conceptos = await db.concepto.findMany({
