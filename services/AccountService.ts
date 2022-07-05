@@ -2,12 +2,10 @@ import Account from '@model/Account';
 import DatabaseConnection from '@database/DatabaseConnection';
 import { PrismaClient } from '@prisma/client';
 
-export class AccountService {
+const AccountService = (database: PrismaClient) => {
 
-  constructor(private database: PrismaClient) {}
-
-  async createAccount(account: Account) {
-    const created = await this.database.accounts.create({
+  const createAccount = async (account: Account) => {
+    const created = await database.accounts.create({
       data : {
         name: account.name,
         abstract_account: account.abstract_account,
@@ -26,11 +24,11 @@ export class AccountService {
       }
     });
     const updateQuery = `UPDATE accounts SET account_id = ${account.parent_account_id}${created.account_id} WHERE account_id = ${created.account_id}`;
-    await this.database.$executeRaw(updateQuery);
-  }
+    await database.$executeRaw(updateQuery);
+  };
 
-  async updateAccountStatus(accountId: number, accountStatus: boolean) {
-    await this.database.accounts.update({
+  const updateAccountStatus = async (accountId: number, accountStatus: boolean) => {
+    await database.accounts.update({
       where: {
         account_id: accountId
       },
@@ -38,29 +36,63 @@ export class AccountService {
         enabled: accountStatus
       }
     });
-  }
+  };
 
-  async getAccounts(where?: object, orderBy?: object) : Promise<Account[]> {
-    return await this.database.accounts.findMany({
+  const getAccounts = async (where?: object, orderBy?: object) : Promise<Account[]> => {
+    return await database.accounts.findMany({
       where,
       orderBy,
       include: {
         account_types: true
       }
     });
-  }
+  };
 
-  async getGroupedAccounts(where?: object, orderBy?: object) {
-    return this.groupAccounts(await this.getAccounts(where, orderBy));
-  }
-
-  groupAccounts(accounts: Account[]) {
+  const groupAccounts = (accounts: Account[]) => {
     return accounts.reduce((grouped, item) => {
       (grouped[item['account_types'].name] = grouped[item['account_types'].name] || []).push(item);
       return grouped;
     }, {});
-  }
+  };
 
-}
+  const getGroupedAccounts = async (where?: object, orderBy?: object) => {
+    return groupAccounts(await getAccounts(where, orderBy));
+  };
 
-export default new AccountService(DatabaseConnection.getConnection());
+  const getAccountsByIDs = async (ids: number[]) => {
+    return await database.accounts.findMany({
+      where: {
+        account_id: {
+          in: ids
+        }
+      },
+      include: {
+        account_types: true
+      }
+    });
+  };
+
+  const getAccountById = async (id: number) => {
+    return await database.accounts.findUnique({
+      where: {
+        account_id: id
+      },
+      include: {
+        account_types: true
+      }
+    });
+  };
+
+  return {
+    createAccount,
+    updateAccountStatus,
+    getAccounts,
+    getGroupedAccounts,
+    getAccountsByIDs,
+    getAccountById,
+    groupAccounts
+  };
+
+};
+
+export default AccountService(DatabaseConnection.getConnection());

@@ -41,7 +41,9 @@ const POST = async (request: NextApiRequest, response: NextApiResponse) => {
 };
 
 const GET = async (request: NextApiRequest, response: NextApiResponse) => {
-  return response.status(201).json(await AccountService.getAccounts(undefined, { name: 'asc' }));
+  return response
+    .status(200)
+    .json(await AccountService.getAccounts(undefined, { name: 'asc' }));
 };
 
 const method = {

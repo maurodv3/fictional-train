@@ -27,7 +27,12 @@ INSERT INTO roles_actions VALUES (8, 3, 5);
 INSERT INTO financial_entities VALUES (1, '30-12345678-1', 'Calle Falsa 123, Junín, Buenos Aires', '02364123456', 'Chibal S.R.L', 'Chibal S.R.L', 'info@chibal.com.ar');
 INSERT INTO entity_liable VALUES(1, 1, 'Fernandinho', 'Balbin', 'fernandinho@chibal.com.ar');
 INSERT INTO entity_liable VALUES(2, 1, 'Leonardo', 'Chivel', 'leonardo@chibal.com.ar');
-INSERT INTO financial_period VALUES (1, 1, '2020', '2020-01-01 00:00:00.000+02', '2020-12-31 23:59:59.999+02');
+
+INSERT INTO financial_period VALUES (1, 1, '2020', '2020-01-01 00:00:00.000', '2020-12-31 23:59:59.999');
+INSERT INTO financial_period VALUES (2, 1, '2021', '2021-01-01 00:00:00.000', '2021-12-31 23:59:59.999');
+INSERT INTO financial_period VALUES (3, 1, '2022', '2022-01-01 00:00:00.000', '2022-12-31 23:59:59.999');
+INSERT INTO financial_period VALUES (4, 1, '2023', '2023-01-01 00:00:00.000', '2023-12-31 23:59:59.999');
+INSERT INTO financial_period VALUES (5, 1, '2024', '2024-01-01 00:00:00.000', '2024-12-31 23:59:59.999');
 
 -- Test users
 INSERT INTO users VALUES (1, 'admin', 'Administrador', 'admin@b3000.com', 'admin', 1, 1);

@@ -60,8 +60,16 @@ class FijoTabla implements ConceptoCalculator {
 
 class Calculado implements ConceptoCalculator {
 
+  private getOrDefault(value: number, def: number) : number {
+    return value === null ? def : value;
+  }
+
   calculate(concepto: Concepto) : number {
-    return (concepto.getValor() / concepto.getDivisor()) * concepto.getMultiplicador() * concepto.getCantidad();
+    const valor = this.getOrDefault(concepto.getValor(), 0);
+    const divisor = this.getOrDefault(concepto.getDivisor(), 1);
+    const multiplicador = this.getOrDefault(concepto.getMultiplicador(), 1);
+    const cantidad = this.getOrDefault(concepto.getCantidad(), 1);
+    return (valor / divisor) * multiplicador * cantidad;
   }
 
 }

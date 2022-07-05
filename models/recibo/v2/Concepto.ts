@@ -5,6 +5,7 @@ const PARAMETER_REGEX = /\$\.[a-z\d%]*/ig;
 
 export class Concepto {
 
+  id: number;
   recibo: Recibo;
 
   codigo: number;
@@ -122,7 +123,7 @@ export enum TipoConcepto {
 }
 
 export enum Columna {
-  HABERES_CON_DESCUENTO,
-  HABERES_SIN_DESCUENTO,
+  REMUNERATIVO,
+  NO_REMUNERATIVO,
   DEDUCCCIONES
 }

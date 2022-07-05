@@ -2,13 +2,12 @@ import { Recibo } from './Recibo';
 import { Puesto } from './Puesto';
 import { CuentaBanco } from './Banco';
 import { Empleado, Familiar, TipoFamiliar } from './Empleado';
-import { ConceptoCalculado } from './ConceptoCalculado';
 import DatabaseConnection from '../../../prisma/DatabaseConnection';
 import { toModel } from './ConceptoMapper';
 
 describe('asd', () => {
 
-  it.skip('asd', async () => {
+  it('asd', async () => {
 
     const desarrollador: Puesto = new Puesto();
     desarrollador.nombre = 'Desarollador de Software';
@@ -54,7 +53,7 @@ describe('asd', () => {
 
   });
 
-  it.skip('qwe', async () => {
+  it('qwe', async () => {
 
     const db = DatabaseConnection.getConnection();
     const conceptos = await db.concepto.findMany({

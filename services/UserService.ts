@@ -2,22 +2,20 @@ import DatabaseConnection from '@database/DatabaseConnection';
 import { PrismaClient } from '@prisma/client';
 import { TabInfo } from '@model-ui/interfaces';
 
-export class UserService {
+const UserService = (database: PrismaClient) => {
 
-  constructor(private database: PrismaClient) {}
-
-  async getUserInfo(context) {
+  const getUserInfo = async (context) => {
 
     const { req } = context;
     const loggedUser = req.session.get('user');
 
-    const expandedUser = await this.database.users.findUnique({
+    const expandedUser = await database.users.findUnique({
       where: {
         user_id: loggedUser.id
       }
     });
 
-    const entity = await this.database.financial_entities.findUnique({
+    const entity = await database.financial_entities.findUnique({
       where: {
         entity_id: expandedUser.financial_entity_id
       },
@@ -27,9 +25,9 @@ export class UserService {
     });
 
     return [expandedUser, entity];
-  }
+  };
 
-  async getNavTabs(context) {
+  const getNavTabs = async (context) => {
 
     const { req, resolvedUrl } = context;
     const user = req.session.get('user');
@@ -48,11 +46,30 @@ export class UserService {
     tabs.push({ name: 'tab_employee', href: '/employee', active: resolvedUrl === '/employee' });
     // Add permissions.
     tabs.push({ name: 'tab_jobs', href: '/jobs', active: resolvedUrl === '/jobs' });
+    // Add permissions
+    tabs.push({ name: 'tab_concepts', href: '/concept', active: resolvedUrl === '/concept' });
+    // Add permissions
+    tabs.push({ name: 'tab_liqui', href: '/liquidacion', active: resolvedUrl === '/liquidacion' });
 
     return tabs;
 
-  }
+  };
 
-}
+  const getExpandedUser = async (req) => {
+    const loggedUser = req.session.get('user');
+    return await database.users.findUnique({
+      where: {
+        user_id: loggedUser.id
+      }
+    });
+  };
 
-export default new UserService(DatabaseConnection.getConnection());
+  return {
+    getUserInfo,
+    getNavTabs,
+    getExpandedUser
+  };
+
+};
+
+export default UserService(DatabaseConnection.getConnection());

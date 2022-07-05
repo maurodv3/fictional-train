@@ -1,4 +1,5 @@
 import { Recibo } from './Recibo';
+import Variables from '@model/recibo/v2/Variables';
 
 class Param {
 
@@ -7,24 +8,27 @@ class Param {
   description: string;
   extractor: (recibo: Recibo) => number;
 
-  constructor(references: string, placeholder: string, description: string, extractor: (recibo: Recibo) => number) {
-    this.references = references;
-    this.placeholder = placeholder;
-    this.description = description;
+  constructor(variable: { symbol: string; name: string; desc: string; }, extractor: (recibo: Recibo) => number) {
+    this.references = variable.name;
+    this.placeholder = variable.symbol;
+    this.description = variable.desc;
     this.extractor = extractor;
   }
 
 }
 
 const PARAMS : Param[] = [
-  new Param('Sueldo Basico', '$.basico', '', r => r.sueldo),
-  new Param('Jornada', '$.jornada', '', r => r.duracionJornada),
-  new Param('Antiguedad', '$.antiguedad', '', r => r.empleado.getAntiguedad(r.fechaGeneracion)),
-  new Param('Horas Extras 50%', '$.horasExtras50%', '', r => r.horasExtras50),
-  new Param('Horas Extras 100%', '$.horasExtras100%', '', r => r.horasExtras100),
-  new Param('Hijos Sin Discapacidades', '$.hijosNoDiscapacitados', '', r => r.empleado.getHijosMenores().filter(hijo => !hijo.discapacitado).length),
-  new Param('Hijos Con Discapacidades', '$.hijosDiscapacitados', '', r => r.empleado.getHijosMenores().filter(hijo => hijo.discapacitado).length),
-  new Param('No Definido', '$.na', 'No necesario para el calculo', r => null)
+  new Param(Variables.BASICO, r => r.sueldo),
+  new Param(Variables.JORNADA, r => r.duracionJornada),
+  new Param(Variables.ANTIGUEDAD, r => r.empleado.getAntiguedad(r.fechaGeneracion)),
+  new Param(Variables.HORAS_EXTRAS_50, r => r.horasExtras50),
+  new Param(Variables.HORAS_EXTRAS_100, r => r.horasExtras100),
+  new Param(Variables.HIJO_S_DISC, r => r.empleado.getHijosMenores().filter(hijo => !hijo.discapacitado).length),
+  new Param(Variables.HIJO_C_DISC, r => r.empleado.getHijosMenores().filter(hijo => hijo.discapacitado).length),
+  new Param(Variables.NA, r => null),
+  new Param(Variables.MAYOR_REMUN, r => r.empleado.mayorRemuneracionPercibida),
+  new Param(Variables.MES, r => new Date().getMonth() + 1),
+  new Param(Variables.MESES_TRABAJADOS, r => r.empleado.mesesTrabajados)
 ];
 
 export class ReciboParameterMapper {

@@ -15,7 +15,7 @@ function DailyBookRow({ entry, startGroup, optGroup, endGroup, mappers, alternat
   const borderThick = `px-2 py-1 border border-gray-500 border-b-2 ${alternate ? 'bg-white' : 'bg-gray-200'}`;
 
   return (
-    entry.entry_seat_lines.map((operation, index) => {
+    entry.entry_seat_lines.sort((a, b) => b.entry_seat_line_id - a.entry_seat_line_id).map((operation, index) => {
       return (
         index === 0 ? (
           <tr key={`${entry['entry_seat_id']}-${operation['entry_seat_line_id']}`}>

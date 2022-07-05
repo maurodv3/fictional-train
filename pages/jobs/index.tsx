@@ -4,66 +4,107 @@ import UserService from '@services/UserService';
 import Navbar from '@components/Navbar';
 import Table from '@components/Table';
 import Link from 'next/link';
+import JobService from '@services/JobService';
+import DepartmentService from '@services/DepartmentService';
+import { useState } from 'react';
 
-const buttons = () => {
+const buttons = (id) => {
   return (
-    <Link href="/jobs/1">
-      <button>
-        <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-        </svg>
-      </button>
-    </Link>
+    <div>
+      <Link href={`/jobs/${id}`}>
+        <button className="whitespace-nowrap text-right text-sm font-medium text-indigo-600 hover:text-indigo-900">
+          <p>Detalles</p>
+        </button>
+      </Link>
+      <span className="text-indigo-600">{' | '}</span>
+      <Link href={`/jobs/edit/${id}`}>
+        <button className="whitespace-nowrap text-right text-sm font-medium text-indigo-600 hover:text-indigo-900">
+          <p>Editar</p>
+        </button>
+      </Link>
+    </div>
+
   );
 };
 
-export default function Jobs({ tabs }) {
+export default function Jobs({ tabs, jobs, departments, added }) {
+
+  const formatter = Intl.NumberFormat('es-AR', {
+    style: 'currency',
+    currency: 'ARS',
+  });
+
+  const [displayedJobs, setDisplayedJobs] = useState(jobs);
+
+  const filterJobs = (e) => {
+    if (e.target.value === '-1') {
+      setDisplayedJobs(jobs);
+    } else {
+      setDisplayedJobs(jobs.filter(job => job.department.department_id === Number.parseInt(e.target.value, 10)));
+    }
+  };
+
   return (
-    <Navbar tabs={tabs} withHeader={<p>Puestos</p>}>
-      <Table
-        headers={['Puesto', 'Departamento', 'Categorias', 'Sueldo Base', 'Acciones']}
-        selectedFields={['puesto', 'departamento', 'categorias', 'sueldo', 'acciones']}
-        values={[
-          {
-            puesto: 'Jefe ventas',
-            departamento: 'Ventas',
-            categorias: 'Jefe',
-            sueldo: '$ 50.000,00',
-            acciones: buttons()
-          },
-          {
-            puesto: 'Jefe Compras',
-            departamento: 'Compras',
-            categorias: 'Jefe',
-            sueldo: '$ 50.000,00',
-            acciones: buttons()
-          },
-          {
-            puesto: 'Vendedor',
-            departamento: 'Ventas',
-            categorias: '1, 2, 3',
-            sueldo: '$ 35.000,00',
-            acciones: buttons()
-          },
-          {
-            puesto: 'Repartidor',
-            departamento: 'Distribucion',
-            categorias: '1, 2',
-            sueldo: '$ 30.000,00',
-            acciones: buttons()
-          },
-        ]}
-      />
+    <Navbar tabs={tabs}>
+      <div className="mb-5 relative border border-gray-100 rounded-md shadow-md bg-white no-print">
+        <div className="flex h-24 rounded-sm px-4 py-4">
+          <div className="mx-5">
+            <p className="text-sm text-gray-700 font-bold mb-2">Departamento</p>
+            <select className="px-3 py-2 w-36 std-data-input capitalize text-md text-gray-700" onChange={filterJobs}>
+              <option value={-1}>- Todos</option>
+              {departments.map(deps =>
+                <option key={deps.department_id} value={deps.department_id}>{deps.name}</option>
+              )}
+            </select>
+          </div>
+        </div>
+        <div className="absolute top-2 right-4 h-8 w-8 text-center">
+          <Link href={'/jobs/add'}>
+            <button className="border border-gray-300 rounded-full bg-indigo-500 h-10 w-10 p-2 focus:outline-none focus:shadow-outline hover:bg-indigo-700">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="whitesmoke">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+            </button>
+          </Link>
+        </div>
+      </div>
+      { displayedJobs.length === 0 ? (
+        <p className="text-center"> No se encontraron puestos </p>
+      ) : (
+        <Table
+          headers={['Puesto', 'Departamento', 'Categorias', 'Sueldo Base', 'Acciones']}
+          selectedFields={['name', 'department', 'categories', 'base_salary', 'actions']}
+          values={
+            displayedJobs.map((job) => {
+              return {
+                name: job.name,
+                department: job.department.name,
+                categories: <ul>{job.job_category.map(jc => <li key={jc.job_category_id}>{jc.name}</li>)}</ul>,
+                base_salary: formatter.format(job.base_salary),
+                actions: buttons(job.job_id)
+              };
+            })
+          }
+        />
+      )}
+
     </Navbar>
   );
 }
 
 export const getServerSideProps: GetServerSideProps = withSecureAccess(async (context) => {
+
+  const addedJob = Number.parseInt(context.query.added, 10);
+
   const tabs = await UserService.getNavTabs(context);
+  const jobs = await JobService.getJobs();
+  const departments = await DepartmentService.getDepartments();
   return {
     props: {
-      tabs
+      tabs,
+      jobs,
+      departments,
+      added: addedJob
     }
   };
 }, null);

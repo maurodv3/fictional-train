@@ -13,6 +13,11 @@ export class ConceptoBuilder {
     return this._concepto;
   }
 
+  id(id: number) : ConceptoBuilder {
+    this._concepto.id = id;
+    return this;
+  }
+
   codigo(codigo: number) : ConceptoBuilder {
     this._concepto.codigo = codigo;
     return this;

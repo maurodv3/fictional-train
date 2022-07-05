@@ -5,6 +5,7 @@ import { ConceptoBuilder } from './ConceptoBuilder';
 export function toModel(concepto: concepto & { concepto_tabla: concepto_tabla[] }) : Concepto {
 
   const builder: ConceptoBuilder = new ConceptoBuilder(null)
+    .id(concepto.concepto_id)
     .codigo(concepto.codigo)
     .nombre(concepto.nombre)
     .unidad(concepto.unidad)
@@ -34,7 +35,7 @@ export function toModel(concepto: concepto & { concepto_tabla: concepto_tabla[] 
 }
 
 export function toModelList(conceptos: concepto[]) : Concepto[] {
-  return [];
+  return conceptos.map(toModel);
 }
 
 export function toDBObject(concepto: Concepto) : concepto {

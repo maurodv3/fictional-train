@@ -40,6 +40,10 @@ input[type=number] {
     .print-only {
         display: block;
     }
+    .pagebreak {
+        clear: both;
+        page-break-after: always;
+    }
 }
 
 /* Start purging... */

@@ -10,6 +10,7 @@ export class ConceptoCalculado {
     this._concepto = concepto;
     this.gids = new Set<string>([this.grupo, this.subGrupo]);
     this._calculo = concepto.calcular();
+    this._concepto.recibo = null;
   }
 
   get grupo(): string {

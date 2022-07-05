@@ -1,15 +1,16 @@
 import prisma from '../prisma/prisma';
 import { PrismaClient } from '@prisma/client';
 
-class DatabaseConnection {
+const DatabaseConnection = (connection: PrismaClient) => {
 
-  constructor(private connection: PrismaClient) {
-  }
+  const getConnection = () : PrismaClient => {
+    return connection;
+  };
 
-  getConnection() : PrismaClient {
-    return this.connection;
-  }
+  return {
+    getConnection
+  };
 
-}
+};
 
-export default new DatabaseConnection(prisma);
+export default DatabaseConnection(prisma);

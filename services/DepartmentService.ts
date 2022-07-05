@@ -5,28 +5,45 @@ export interface DepartmentInput {
   name: string;
 }
 
-export class DepartmentService {
+const DepartmentService = (database: PrismaClient) => {
 
-  constructor(private database: PrismaClient) {}
-
-  async addDepartment(d: DepartmentInput): Promise<department> {
-    return await this.database.department.create({
+  const addDepartment = async (d: DepartmentInput): Promise<department> => {
+    return await database.department.create({
       data: d
     });
-  }
+  };
 
-  async getDepartment(departmentId: number): Promise<department> {
-    return await this.database.department.findUnique({
+  const getDepartment = async (departmentId: number): Promise<department> => {
+    return await database.department.findUnique({
       where: {
         department_id: departmentId
       }
     });
-  }
+  };
 
-  async getDepartments() : Promise<department[]> {
-    return await this.database.department.findMany();
-  }
+  const getDepartments = async () : Promise<department[]> => {
+    return await database.department.findMany();
+  };
 
-}
+  const getDepartmentsWithJobs = async () : Promise<any> => {
+    return await database.department.findMany({
+      include: {
+        job: {
+          include: {
+            job_category: true
+          }
+        }
+      }
+    });
+  };
 
-export default new DepartmentService(DatabaseConnection.getConnection());
+  return {
+    addDepartment,
+    getDepartment,
+    getDepartments,
+    getDepartmentsWithJobs
+  };
+
+};
+
+export default DepartmentService(DatabaseConnection.getConnection());
